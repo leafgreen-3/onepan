@@ -59,10 +59,10 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Country'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Spain').last);
+    await tester.tap(find.text('Argentina').last);
     await tester.pumpAndSettle();
 
-    expect(container.read(onboardingControllerProvider).country, 'Spain');
+    expect(container.read(onboardingControllerProvider).country, 'Argentina');
 
     final button = tester.widget<FilledButton>(find.byType(FilledButton));
     expect(button.onPressed, isNotNull);
@@ -114,7 +114,7 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Country'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Spain').last);
+    await tester.tap(find.text('Argentina').last);
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Next'));
@@ -145,7 +145,7 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Country'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Spain').last);
+    await tester.tap(find.text('Argentina').last);
     await tester.pumpAndSettle();
 
     final notifier = firstContainer.read(onboardingControllerProvider.notifier);
@@ -176,7 +176,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
     await tester.pumpAndSettle();
 
-    expect(secondContainer.read(onboardingControllerProvider).country, 'Spain');
-    expect(find.text('Spain'), findsOneWidget);
+    expect(secondContainer.read(onboardingControllerProvider).country, 'Argentina');
+    expect(find.text('Argentina'), findsOneWidget);
   });
 }

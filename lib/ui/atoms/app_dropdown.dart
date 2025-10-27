@@ -89,38 +89,47 @@ class _AppDropdownState extends State<AppDropdown> {
       color: AppColors.onSurface.withValues(alpha: AppOpacity.mediumText),
     );
 
+    final hasValue = (widget.value != null && widget.value!.isNotEmpty);
     return Semantics(
       label: widget.semanticsLabel ?? widget.label,
       textField: true,
-      child: TextField(
-        key: widget.fieldKey,
-        controller: _displayController,
-        readOnly: true,
-        style: AppTextStyles.body.copyWith(color: AppColors.onSurface),
-        onTap: _openSelector,
-        decoration: InputDecoration(
-          labelText: widget.label,
-          hintText: widget.placeholder,
-          hintStyle: hintStyle,
-          suffixIcon: const Icon(
-            Icons.arrow_drop_down,
-            color: AppColors.onSurface,
-            size: AppSizes.icon,
+      value: hasValue ? widget.value : null,
+      hint: hasValue ? null : widget.placeholder,
+      readOnly: true,
+      onTap: _openSelector,
+      // Ensure only this Semantics node contributes the accessible label,
+      // not the inner TextField.
+      child: ExcludeSemantics(
+        child: TextField(
+          key: widget.fieldKey,
+          controller: _displayController,
+          readOnly: true,
+          style: AppTextStyles.body.copyWith(color: AppColors.onSurface),
+          onTap: _openSelector,
+          decoration: InputDecoration(
+            labelText: widget.label,
+            hintText: widget.placeholder,
+            hintStyle: hintStyle,
+            suffixIcon: const Icon(
+              Icons.arrow_drop_down,
+              color: AppColors.onSurface,
+              size: AppSizes.icon,
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.md,
+            ),
+            filled: true,
+            fillColor: AppColors.surface,
+            border: _buildBorder(
+                color: AppColors.onSurface, width: AppThickness.hairline),
+            enabledBorder: _buildBorder(
+                color: AppColors.onSurface, width: AppThickness.hairline),
+            focusedBorder: _buildBorder(
+                color: AppColors.primary, width: AppThickness.stroke),
+            errorText: widget.errorText,
+            errorStyle: AppTextStyles.label.copyWith(color: AppColors.danger),
           ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.lg,
-            vertical: AppSpacing.md,
-          ),
-          filled: true,
-          fillColor: AppColors.surface,
-          border: _buildBorder(
-              color: AppColors.onSurface, width: AppThickness.hairline),
-          enabledBorder: _buildBorder(
-              color: AppColors.onSurface, width: AppThickness.hairline),
-          focusedBorder: _buildBorder(
-              color: AppColors.primary, width: AppThickness.stroke),
-          errorText: widget.errorText,
-          errorStyle: AppTextStyles.label.copyWith(color: AppColors.danger),
         ),
       ),
     );
