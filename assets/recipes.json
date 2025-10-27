@@ -1,82 +1,150 @@
 [
   {
-    "id": "spaghetti-arrabbiata-0l5y3z9",
-    "title": "Spaghetti all'Arrabbiata",
-    "subtitle": "A fiery Roman classic with garlic and chili",
-    "tags": ["italian", "pasta", "vegan"],
-    "minutes": 25,
+    "id": "spicy-tomato-pasta",
+    "title": "Spicy Tomato Pasta",
+    "subtitle": "Weeknight heat in 20 minutes",
+    "tags": ["pasta", "quick", "vegetarian"],
+    "minutes": 20,
     "servings": 2,
-    "spice": "hot",
-    "image": "assets/images/arrabbiata.jpg",
+    "spice": "medium",
+    "image": "assets/images/spicy_tomato_pasta.jpg",
     "ingredients": [
       "200g spaghetti",
       "2 tbsp olive oil",
-      "3 cloves garlic, sliced",
-      "1-2 tsp red chili flakes",
-      "400g canned tomatoes",
-      "Salt to taste",
-      "Fresh parsley, chopped"
+      "2 cloves garlic, sliced",
+      "1/2 tsp chili flakes",
+      "300g passata",
+      "Salt & pepper"
     ],
     "steps": [
-      "Bring a large pot of salted water to a boil and cook spaghetti al dente.",
-      "Warm olive oil; gently sauté garlic and chili until fragrant.",
-      "Add tomatoes, simmer 10 minutes; season with salt.",
-      "Toss in spaghetti and parsley; serve immediately."
+      "Boil salted water; cook spaghetti al dente.",
+      "Sauté garlic and chili in oil.",
+      "Add passata; simmer 5 minutes.",
+      "Toss with pasta; season and serve."
     ],
     "version": "1.0"
   },
   {
-    "id": "chickpea-curry-1abc2de",
-    "title": "Weeknight Chickpea Curry",
-    "subtitle": "Creamy, quick, and comforting",
-    "tags": ["curry", "vegan", "gluten-free"],
-    "minutes": 30,
-    "servings": 4,
-    "spice": "medium",
-    "image": "assets/images/chickpea_curry.png",
-    "ingredients": [
-      "1 tbsp oil",
-      "1 onion, diced",
-      "2 cloves garlic, minced",
-      "1 tbsp curry powder",
-      "400g canned tomatoes",
-      "400ml coconut milk",
-      "2 cans chickpeas, drained",
-      "Salt and pepper"
-    ],
-    "steps": [
-      "Sauté onion in oil until soft; add garlic and curry powder.",
-      "Stir in tomatoes and coconut milk; simmer 10 minutes.",
-      "Add chickpeas; simmer 5 more minutes; season to taste.",
-      "Serve with rice."
-    ],
-    "version": "1.0"
-  },
-  {
-    "id": "pancakes-classic-32zzk1m",
-    "title": "Classic Fluffy Pancakes",
-    "subtitle": "Weekend favorite, endlessly customizable",
-    "tags": ["breakfast", "sweet"],
-    "minutes": 20,
+    "id": "lemon-herb-chicken",
+    "title": "Lemon Herb Chicken",
+    "subtitle": "Bright, juicy skillet chicken",
+    "tags": ["chicken", "gluten-free", "30-min"],
+    "minutes": 28,
     "servings": 3,
     "spice": "mild",
-    "image": "assets/images/pancakes.webp",
+    "image": "assets/images/lemon_herb_chicken.jpg",
     "ingredients": [
-      "1 cup flour",
-      "2 tbsp sugar",
-      "1 tsp baking powder",
-      "1/2 tsp baking soda",
-      "Pinch of salt",
-      "1 cup milk",
-      "1 egg",
-      "1 tbsp melted butter"
+      "500g chicken thighs",
+      "1 lemon (zest & juice)",
+      "2 tbsp olive oil",
+      "1 tsp dried oregano",
+      "1 tsp dried thyme",
+      "Salt & pepper"
     ],
     "steps": [
-      "Whisk dry ingredients; add milk, egg, butter; mix until just combined.",
-      "Cook scoops on a hot griddle until bubbles form; flip and finish.",
-      "Serve warm with toppings."
+      "Marinate chicken with lemon, oil, herbs, salt & pepper (10 min).",
+      "Sear in hot pan 4–5 min/side until cooked through.",
+      "Rest 3 minutes; slice and serve."
+    ],
+    "version": "1.0"
+  },
+  {
+    "id": "veggie-stir-fry",
+    "title": "Veggie Stir-Fry",
+    "subtitle": "Colorful veggies in 15 minutes",
+    "tags": ["vegan", "quick", "wok"],
+    "minutes": 15,
+    "servings": 2,
+    "spice": "mild",
+    "image": "assets/images/veggie_stir_fry.jpg",
+    "ingredients": [
+      "1 red pepper, sliced",
+      "1 small broccoli, florets",
+      "1 carrot, matchsticks",
+      "2 tbsp soy sauce",
+      "1 tbsp sesame oil",
+      "1 clove garlic, minced"
+    ],
+    "steps": [
+      "Stir-fry veg on high heat 3–4 minutes.",
+      "Add soy and sesame; toss 1 minute.",
+      "Serve with rice or noodles."
+    ],
+    "version": "1.0"
+  },
+  {
+    "id": "butter-garlic-shrimp",
+    "title": "Butter Garlic Shrimp",
+    "subtitle": "Rich and garlicky in 12 minutes",
+    "tags": ["seafood", "quick"],
+    "minutes": 12,
+    "servings": 2,
+    "spice": "medium",
+    "image": "assets/images/butter_garlic_shrimp.jpg",
+    "ingredients": [
+      "300g shrimp, peeled",
+      "2 tbsp butter",
+      "2 cloves garlic, minced",
+      "Pinch chili flakes",
+      "Lemon wedges",
+      "Salt"
+    ],
+    "steps": [
+      "Melt butter; cook garlic 30 seconds.",
+      "Add shrimp and chili; cook 2–3 minutes until pink.",
+      "Season and finish with lemon."
+    ],
+    "version": "1.0"
+  },
+  {
+    "id": "slow-beef-ragu",
+    "title": "Slow Beef Ragu",
+    "subtitle": "Comfort classic with depth",
+    "tags": ["beef", "slow", "comfort"],
+    "minutes": 180,
+    "servings": 4,
+    "spice": "mild",
+    "image": "assets/images/slow_beef_ragu.jpg",
+    "ingredients": [
+      "600g beef chuck, cubes",
+      "1 onion, diced",
+      "2 cloves garlic, minced",
+      "400g crushed tomatoes",
+      "1 cup stock",
+      "Olive oil, salt & pepper"
+    ],
+    "steps": [
+      "Sear beef; remove.",
+      "Soften onion & garlic; add tomatoes and stock.",
+      "Return beef; simmer low 2–3 hours until tender."
+    ],
+    "version": "1.0"
+  },
+  {
+    "id": "chana-masala",
+    "title": "Chana Masala",
+    "subtitle": "Spiced chickpeas (veg)",
+    "tags": ["vegan", "legumes", "spicy"],
+    "minutes": 35,
+    "servings": 4,
+    "spice": "hot",
+    "image": "assets/images/chana_masala.jpg",
+    "ingredients": [
+      "2 tbsp oil",
+      "1 onion, chopped",
+      "2 cloves garlic, minced",
+      "1 tsp grated ginger",
+      "2 tsp garam masala",
+      "1 tsp chili powder",
+      "400g crushed tomatoes",
+      "2 cans chickpeas, drained",
+      "Salt"
+    ],
+    "steps": [
+      "Sauté onion, garlic, ginger.",
+      "Add spices; cook 30 seconds.",
+      "Add tomatoes & chickpeas; simmer 15 minutes. Season."
     ],
     "version": "1.0"
   }
 ]
-

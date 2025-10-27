@@ -9,5 +9,9 @@ class Routes {
   static const ingredients = '/ingredients';
   static const finalizer = '/finalizer';
   static const recipe = '/recipe';
+
+  // Dev routes
+  static const devRecipes = '/dev/recipes';
+  static const devRecipeBase = '/dev/recipe'; // used for building detail path
 }
 

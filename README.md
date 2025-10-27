@@ -54,6 +54,12 @@ Dependencies
 Screenshot/GIF
 - [Placeholder: architecture-shell.png]
 
+## Data Layer
+
+- Seeds & Loader — Curated seed recipes live in `assets/recipes.json` for fast, deterministic development. They validate against Schema v1 (`lib/models/recipe.dart`) when loaded through the loader utility, which aggregates per-item validation errors with indices. A tiny dev list/detail flow exists to preview this data end-to-end without the full UI. See docs for details:
+  - docs/data/seeds_and_loader.md
+  - docs/dev/seed_preview_routes.md
+
 ## Customize
 
 What it does
