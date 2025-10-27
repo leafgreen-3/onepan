@@ -13,5 +13,5 @@ class Routes {
   // Dev routes
   static const devRecipes = '/dev/recipes';
   static const devRecipeBase = '/dev/recipe'; // used for building detail path
+  static const devComponents = '/dev/components';
 }
-

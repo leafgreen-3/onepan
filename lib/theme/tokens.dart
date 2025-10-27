@@ -92,3 +92,51 @@ class AppElevation {
   static const double e3 = 3.0;
 }
 
+/// Durations for animations and transitions.
+class AppDurations {
+  AppDurations._();
+
+  static const Duration fast = Duration(milliseconds: 150);
+  static const Duration normal = Duration(milliseconds: 250);
+  static const Duration slow = Duration(milliseconds: 400);
+  static const Duration shimmerPeriod = Duration(milliseconds: 1200);
+}
+
+/// Opacity scales for visual states.
+class AppOpacity {
+  AppOpacity._();
+
+  static const double disabled = 0.38;
+  static const double focus = 0.12;
+  static const double hover = 0.08;
+  static const double mediumText = 0.80;
+  static const double shimmerHighlight = 0.22;
+  static const double max = 1.0;
+}
+
+/// Visual effects constants.
+class AppEffects {
+  AppEffects._();
+
+  static const List<double> shimmerStops = [0.1, 0.3, 0.6];
+  static const double shimmerTranslateStart = -1.0;
+  static const double shimmerTranslateEnd = 2.0;
+}
+
+/// Common sizes and thickness tokens.
+class AppSizes {
+  AppSizes._();
+
+  // Minimum interactive target per accessibility guidance.
+  static const double minTouchTarget = 48.0;
+  static const double icon = 24.0;
+}
+
+class AppThickness {
+  AppThickness._();
+
+  static const double hairline = 1.0;
+  static const double indicator = 3.0;
+  static const double stroke = 2.0;
+}
+
