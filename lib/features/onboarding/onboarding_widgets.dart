@@ -21,10 +21,15 @@ class SectionHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          stepLabel,
-          style: AppTextStyles.label.copyWith(
-            color: AppColors.onSurface.withValues(alpha: AppOpacity.mediumText),
+        // Avoid exposing the step label (e.g., "Country") to semantics to
+        // prevent duplicates with control labels in tests/accessibility.
+        ExcludeSemantics(
+          child: Text(
+            stepLabel,
+            style: AppTextStyles.label.copyWith(
+              color: AppColors.onSurface
+                  .withValues(alpha: AppOpacity.mediumText),
+            ),
           ),
         ),
         const SizedBox(height: AppSpacing.sm),
