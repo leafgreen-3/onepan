@@ -109,6 +109,8 @@ Full doc
 
 ## Onboarding (3 steps)
 
+Note: Country uses a dropdown — a familiar pattern with large touch targets.
+
 What it does
 - Guides first-time users through Country → Level → Diet selections using a single primary CTA on each screen.
 - Captures choices with Riverpod state and persists them to `SharedPreferences` so the flow only runs once per user.

@@ -2,28 +2,72 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:onepan/features/onboarding/country_data.dart';
 import 'package:onepan/di/locator.dart';
 import 'package:onepan/features/onboarding/onboarding_widgets.dart';
 import 'package:onepan/router/routes.dart';
 import 'package:onepan/theme/tokens.dart';
+import 'package:onepan/ui/atoms/app_dropdown.dart';
 
-class OnboardingCountryScreen extends ConsumerWidget {
+class OnboardingCountryScreen extends ConsumerStatefulWidget {
   const OnboardingCountryScreen({super.key});
 
-  static const _countries = <String>[
-    'Europe',
-    'Asia',
-    'Americas',
-    'Africa',
-    'Oceania',
-    'Middle East',
-  ];
+  @override
+  ConsumerState<OnboardingCountryScreen> createState() => _OnboardingCountryScreenState();
+}
+
+class _OnboardingCountryScreenState extends ConsumerState<OnboardingCountryScreen> {
+  bool _showValidationError = false;
+
+  void _handleCountrySelected(String country) {
+    ref.read(onboardingControllerProvider.notifier).selectCountry(country);
+    setState(() {
+      _showValidationError = false;
+    });
+  }
+
+  void _handleMissingSelection() {
+    if (_showValidationError) {
+      return;
+    }
+    setState(() {
+      _showValidationError = true;
+    });
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final state = ref.watch(onboardingControllerProvider);
-    final controller = ref.read(onboardingControllerProvider.notifier);
-    final canProceed = state.country != null;
+    final canProceed = state.country != null && state.country!.isNotEmpty;
+
+    final bodyChildren = <Widget>[
+      const SectionHeader(
+        stepLabel: 'Country',
+        title: 'Where are you?',
+        subtitle: 'We\'ll tailor defaults based on your location.',
+      ),
+      const SizedBox(height: AppSpacing.xl),
+      AppDropdown(
+        fieldKey: const ValueKey('country-dropdown'),
+        label: 'Country',
+        placeholder: 'Select your country',
+        options: kCommonCountries,
+        value: state.country,
+        onChanged: _handleCountrySelected,
+        errorText:
+            _showValidationError && !canProceed ? 'Please choose a country to continue.' : null,
+        semanticsLabel: 'Country',
+      ),
+      if (_showValidationError && !canProceed) ...[
+        const SizedBox(height: AppSpacing.sm),
+        Text(
+          'Pick your country so we can personalise your recipes.',
+          style: AppTextStyles.body.copyWith(color: AppColors.danger),
+        ),
+      ],
+      const Spacer(),
+      _buildPrimaryAction(context: context, canProceed: canProceed),
+    ];
 
     return Scaffold(
       backgroundColor: AppColors.surface,
@@ -42,38 +86,31 @@ class OnboardingCountryScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(AppSpacing.xl),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SectionHeader(
-                stepLabel: 'Country',
-                title: 'Where are you cooking from?',
-                subtitle: 'Pick your region to surface region-friendly recipes.',
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: OptionGrid(
-                    options: _countries,
-                    selectedOption: state.country,
-                    onSelected: controller.selectCountry,
-                  ),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              PrimaryCTA(
-                label: 'Next',
-                onPressed: canProceed
-                    ? () async {
-                        if (state.country == null) {
-                          return;
-                        }
-                        context.go(Routes.onboardingLevel);
-                      }
-                    : null,
-              ),
-            ],
+            children: bodyChildren,
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPrimaryAction({required BuildContext context, required bool canProceed}) {
+    final button = PrimaryCTA(
+      label: 'Next',
+      onPressed: canProceed
+          ? () async {
+              context.push(Routes.onboardingLevel);
+            }
+          : null,
+    );
+
+    if (canProceed) {
+      return button;
+    }
+
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: _handleMissingSelection,
+      child: AbsorbPointer(child: button),
     );
   }
 }
