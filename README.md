@@ -72,6 +72,23 @@ Screenshot/GIF
 
 UI depends on these interfaces via DI and is source-agnostic. Repositories are registered in `lib/di/locator.dart` and consumed via `locator<Interface>()`.
 
+## Component Library
+
+OnePan ships a small, token-only component library for building consistent UI quickly. All atoms use design tokens from `lib/theme/tokens.dart` and colors/typography from the active `ThemeData` — no raw numbers or hex values inside widgets.
+
+Atoms available
+- Button (`AppButton`) — filled/tonal/text variants; md/lg sizes; loading/disabled
+- Card (`AppCard`) — token paddings, optional header/media/footer, elevation
+- Chip (`AppChip`) — selectable/filter styles; selected/disabled states
+- ChecklistTile (`ChecklistTile`) — leading icon area, title/subtitle, trailing checkbox
+- SegmentedControl (`AppSegmentedControl`) — 2–4 options with animated thumb
+- Tabs (`AppTabs`) — primary tabs with tokenized indicator
+- Skeleton (`AppSkeleton`) — rectangular/circular shimmer placeholders
+
+Docs and demo
+- Full API and usage: `docs/ui/components.md`
+- Dev demo route: `/dev/components` (open in the running app to see variants and states)
+
 ## Customize
 
 What it does

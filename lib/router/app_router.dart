@@ -9,6 +9,7 @@ import 'package:onepan/features/recipe/recipe_screen.dart';
 import 'package:onepan/screens/dev/recipe_detail_screen.dart';
 import 'package:onepan/screens/dev/recipes_list_screen.dart';
 import 'package:onepan/models/recipe.dart';
+import 'package:onepan/dev/components_demo_screen.dart';
 
 // Central app router configuration using go_router.
 final GoRouter appRouter = GoRouter(
@@ -56,6 +57,11 @@ final GoRouter appRouter = GoRouter(
       name: 'dev_recipe_detail',
       builder: (context, state) =>
           RecipeDetailScreen(recipe: state.extra as Recipe),
+    ),
+    GoRoute(
+      path: Routes.devComponents,
+      name: 'dev_components',
+      builder: (context, state) => const ComponentsDemoScreen(),
     ),
   ],
 );
