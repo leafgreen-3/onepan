@@ -1,0 +1,82 @@
+[
+  {
+    "id": "spaghetti-arrabbiata-0l5y3z9",
+    "title": "Spaghetti all'Arrabbiata",
+    "subtitle": "A fiery Roman classic with garlic and chili",
+    "tags": ["italian", "pasta", "vegan"],
+    "minutes": 25,
+    "servings": 2,
+    "spice": "hot",
+    "image": "assets/images/arrabbiata.jpg",
+    "ingredients": [
+      "200g spaghetti",
+      "2 tbsp olive oil",
+      "3 cloves garlic, sliced",
+      "1-2 tsp red chili flakes",
+      "400g canned tomatoes",
+      "Salt to taste",
+      "Fresh parsley, chopped"
+    ],
+    "steps": [
+      "Bring a large pot of salted water to a boil and cook spaghetti al dente.",
+      "Warm olive oil; gently sauté garlic and chili until fragrant.",
+      "Add tomatoes, simmer 10 minutes; season with salt.",
+      "Toss in spaghetti and parsley; serve immediately."
+    ],
+    "version": "1.0"
+  },
+  {
+    "id": "chickpea-curry-1abc2de",
+    "title": "Weeknight Chickpea Curry",
+    "subtitle": "Creamy, quick, and comforting",
+    "tags": ["curry", "vegan", "gluten-free"],
+    "minutes": 30,
+    "servings": 4,
+    "spice": "medium",
+    "image": "assets/images/chickpea_curry.png",
+    "ingredients": [
+      "1 tbsp oil",
+      "1 onion, diced",
+      "2 cloves garlic, minced",
+      "1 tbsp curry powder",
+      "400g canned tomatoes",
+      "400ml coconut milk",
+      "2 cans chickpeas, drained",
+      "Salt and pepper"
+    ],
+    "steps": [
+      "Sauté onion in oil until soft; add garlic and curry powder.",
+      "Stir in tomatoes and coconut milk; simmer 10 minutes.",
+      "Add chickpeas; simmer 5 more minutes; season to taste.",
+      "Serve with rice."
+    ],
+    "version": "1.0"
+  },
+  {
+    "id": "pancakes-classic-32zzk1m",
+    "title": "Classic Fluffy Pancakes",
+    "subtitle": "Weekend favorite, endlessly customizable",
+    "tags": ["breakfast", "sweet"],
+    "minutes": 20,
+    "servings": 3,
+    "spice": "mild",
+    "image": "assets/images/pancakes.webp",
+    "ingredients": [
+      "1 cup flour",
+      "2 tbsp sugar",
+      "1 tsp baking powder",
+      "1/2 tsp baking soda",
+      "Pinch of salt",
+      "1 cup milk",
+      "1 egg",
+      "1 tbsp melted butter"
+    ],
+    "steps": [
+      "Whisk dry ingredients; add milk, egg, butter; mix until just combined.",
+      "Cook scoops on a hot griddle until bubbles form; flip and finish.",
+      "Serve warm with toppings."
+    ],
+    "version": "1.0"
+  }
+]
+

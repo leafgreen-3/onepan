@@ -54,6 +54,24 @@ Dependencies
 Screenshot/GIF
 - [Placeholder: architecture-shell.png]
 
+## Customize
+
+What it does
+- Lets users set default filters for Servings, Max Time, and Spice tolerance.
+- Used from the main flow to tailor results before browsing; saved values influence Home results by constraining repository queries.
+- Applies design tokens for spacing/typography/colors and persists selections as user preferences.
+
+Dependencies
+- Design tokens: `lib/theme/tokens.dart`
+- Repository filtering: maps selections to query params for recipe data sources
+- Preferences storage: planned `SharedPreferences` service for persistence
+
+Screenshot/GIF
+- [Placeholder: customize-screen.png]
+
+Full doc
+- See `docs/screens/customize.md` for flow, UI, state, routing, and testing notes.
+
 ## Onboarding (Issue #2)
 
 What it does
