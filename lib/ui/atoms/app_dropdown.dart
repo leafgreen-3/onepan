@@ -89,9 +89,14 @@ class _AppDropdownState extends State<AppDropdown> {
       color: AppColors.onSurface.withValues(alpha: AppOpacity.mediumText),
     );
 
+    final hasValue = (widget.value != null && widget.value!.isNotEmpty);
     return Semantics(
       label: widget.semanticsLabel ?? widget.label,
       textField: true,
+      value: hasValue ? widget.value : null,
+      hint: hasValue ? null : widget.placeholder,
+      readOnly: true,
+      onTap: _openSelector,
       // Ensure only this Semantics node contributes the accessible label,
       // not the inner TextField.
       child: ExcludeSemantics(
