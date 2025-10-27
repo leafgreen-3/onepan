@@ -107,23 +107,30 @@ Screenshot/GIF
 Full doc
 - See `docs/screens/customize.md` for flow, UI, state, routing, and testing notes.
 
-## Onboarding (Issue #2)
+## Onboarding (3 steps)
 
 What it does
-- Adds an Onboarding screen stub wired into routing.
-- Serves as the first step in the 6-screen flow, to be expanded with preferences and first-run logic.
+- Guides first-time users through Country → Level → Diet selections using a single primary CTA on each screen.
+- Captures choices with Riverpod state and persists them to `SharedPreferences` so the flow only runs once per user.
+- Redirects completed users straight to Home on subsequent launches via the go_router startup guard.
 
 Where the code lives
-- Screen: `lib/features/onboarding/onboarding_screen.dart`
-- Route: `/onboarding` in `lib/router/app_router.dart` and `lib/router/routes.dart`
+- Step screens: `lib/features/onboarding/step_country.dart`, `lib/features/onboarding/step_level.dart`, `lib/features/onboarding/step_diet.dart`
+- Shared widgets: `lib/features/onboarding/onboarding_widgets.dart`
+- State & persistence: `lib/app/state/onboarding_state.dart`, `lib/app/services/preferences_service.dart`
+- Routing: `lib/router/app_router.dart`, `lib/router/routes.dart`
 
 How it fits
-- Entry point for user setup before browsing and customizing recipes.
-- Will set initial preferences (time, servings, spice) and mark onboarding as complete for future launches.
+- Fulfills the onboarding portion of the six-screen MVP flow before delivering personalized recipes on Home.
+- Stores core dietary preferences that downstream features can read without re-prompting the user.
+- Uses the same design tokens as the rest of the app to stay visually consistent and accessible.
 
 Dependencies
+- State: `riverpod`
+- Persistence: `shared_preferences`
 - Routing: `go_router`
-- Planned: `SharedPreferences` for first-run flag and onboarding completion state
 
 Screenshot/GIF
-- [Placeholder: onboarding-screen.png]
+- [Placeholder: onboarding-country.png]
+- [Placeholder: onboarding-level.png]
+- [Placeholder: onboarding-diet.png]

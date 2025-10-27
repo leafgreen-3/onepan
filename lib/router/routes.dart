@@ -4,6 +4,9 @@ class Routes {
   Routes._();
 
   static const onboarding = '/onboarding';
+  static const onboardingCountry = '/onboarding/country';
+  static const onboardingLevel = '/onboarding/level';
+  static const onboardingDiet = '/onboarding/diet';
   static const home = '/home';
   static const customize = '/customize';
   static const ingredients = '/ingredients';
