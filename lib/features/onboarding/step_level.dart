@@ -65,7 +65,7 @@ class OnboardingLevelScreen extends ConsumerWidget {
                         if (state.level == null) {
                           return;
                         }
-                        context.push(Routes.onboardingDiet);
+                        context.go(Routes.onboardingDiet);
                       }
                     : null,
               ),

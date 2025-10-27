@@ -9,23 +9,29 @@ class OnboardingState {
     this.country,
     this.level,
     this.diet,
+    this.hasFinished = false,
   });
 
   final String? country;
   final String? level;
   final String? diet;
+  final bool hasFinished;
 
-  bool get isComplete => country != null && level != null && diet != null;
+  bool get hasAllSelections => country != null && level != null && diet != null;
+
+  bool get isComplete => hasFinished && hasAllSelections;
 
   OnboardingState copyWith({
     String? country,
     String? level,
     String? diet,
+    bool? hasFinished,
   }) {
     return OnboardingState(
       country: country ?? this.country,
       level: level ?? this.level,
       diet: diet ?? this.diet,
+      hasFinished: hasFinished ?? this.hasFinished,
     );
   }
 }
@@ -47,24 +53,34 @@ class OnboardingController extends StateNotifier<OnboardingState> {
       country: saved['country'],
       level: saved['level'],
       diet: saved['diet'],
+      hasFinished: true,
     );
   }
 
   void selectCountry(String country) {
-    state = state.copyWith(country: country);
+    state = state.copyWith(
+      country: country,
+      hasFinished: false,
+    );
   }
 
   void selectLevel(String level) {
-    state = state.copyWith(level: level);
+    state = state.copyWith(
+      level: level,
+      hasFinished: false,
+    );
   }
 
   void selectDiet(String diet) {
-    state = state.copyWith(diet: diet);
+    state = state.copyWith(
+      diet: diet,
+      hasFinished: false,
+    );
   }
 
   Future<void> complete() async {
     final current = state;
-    if (!current.isComplete) {
+    if (!current.hasAllSelections) {
       throw ArgumentError('Cannot complete onboarding without all selections.');
     }
 
@@ -74,11 +90,7 @@ class OnboardingController extends StateNotifier<OnboardingState> {
       diet: current.diet!,
     );
 
-    state = OnboardingState(
-      country: current.country,
-      level: current.level,
-      diet: current.diet,
-    );
+    state = state.copyWith(hasFinished: true);
   }
 
   Future<void> clear() async {

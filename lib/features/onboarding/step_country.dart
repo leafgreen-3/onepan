@@ -98,7 +98,7 @@ class _OnboardingCountryScreenState extends ConsumerState<OnboardingCountryScree
       label: 'Next',
       onPressed: canProceed
           ? () async {
-              context.push(Routes.onboardingLevel);
+              context.go(Routes.onboardingLevel);
             }
           : null,
     );
