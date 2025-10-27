@@ -228,7 +228,7 @@ class Recipe {
     for (final v in items) {
       if (seen.contains(v)) return false;
       seen.add(v);
-      if (prev != null && v.compareTo(prev!) < 0) return false;
+      if (prev != null && v.compareTo(prev) < 0) return false;
       prev = v;
     }
     return true;
