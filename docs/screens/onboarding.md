@@ -5,6 +5,8 @@
 - Keeps the experience focused: three lightweight decisions that influence recipe surfaces without overwhelming the user.
 - Runs once per install unless preferences are cleared, thanks to SharedPreferences-backed persistence.
 
+Update: Country selection uses a country dropdown (not a continents/regions grid) for familiarity and accessibility. The tokens-only policy remains unchanged.
+
 ## Steps & UI Rules
 1. **Country** — grid of regional chips; select exactly one to continue.
 2. **Level** — segmented control for Beginner, Intermediate, Advanced.
