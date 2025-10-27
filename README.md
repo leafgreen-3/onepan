@@ -60,6 +60,18 @@ Screenshot/GIF
   - docs/data/seeds_and_loader.md
   - docs/dev/seed_preview_routes.md
 
+### Repositories
+- RecipeRepository (seed-backed)
+  - Interface: `lib/repository/recipe_repository.dart`
+  - Default impl: `SeedRecipeRepository` reads curated seeds via loader, caches in memory, and supports simple filters (`maxMinutes`, `maxSpice`).
+  - Impl: `lib/repository/seed_recipe_repository.dart`
+- SubstitutionRepository (deterministic mock)
+  - Interface: `lib/repository/substitution_repository.dart`
+  - Default impl: `MockSubstitutionRepository` is deterministic: given the same request it returns the exact same response, seeded by a stable hash of normalized inputs.
+  - Impl: `lib/repository/mock_substitution_repository.dart`
+
+UI depends on these interfaces via DI and is source-agnostic. Repositories are registered in `lib/di/locator.dart` and consumed via `locator<Interface>()`.
+
 ## Customize
 
 What it does
