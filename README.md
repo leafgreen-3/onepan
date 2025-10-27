@@ -1,2 +1,14 @@
-# onepan
-OnePan, a vibe-coded app. As the name suggests, it provides OnePan recipes with a focus on UI/UX.
+# OnePan
+
+A minimal Flutter application skeleton for the OnePan project.
+
+## Getting started
+
+Run the following commands to set up and verify the project locally:
+
+```sh
+flutter pub get
+flutter analyze
+flutter test
+flutter run -d emulator-5554
+```
