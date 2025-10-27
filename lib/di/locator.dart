@@ -1,5 +1,8 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 
+import 'package:onepan/app/services/preferences_service.dart';
+import 'package:onepan/app/state/onboarding_state.dart';
 import 'package:onepan/repository/mock_substitution_repository.dart';
 import 'package:onepan/repository/seed_recipe_repository.dart';
 import 'package:onepan/repository/recipe_repository.dart';
@@ -33,3 +36,15 @@ void setupLocator() {
 
 // Convenience accessor to keep UI concise and source-agnostic.
 T locator<T extends Object>() => getIt<T>();
+
+/// Shared preferences wrapper for onboarding and other persisted settings.
+final preferencesServiceProvider = Provider<PreferencesService>((ref) {
+  return PreferencesService();
+});
+
+/// State holder for onboarding selections and completion persistence.
+final onboardingControllerProvider =
+    StateNotifierProvider<OnboardingController, OnboardingState>((ref) {
+  final service = ref.read(preferencesServiceProvider);
+  return OnboardingController(service);
+});
