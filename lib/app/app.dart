@@ -38,6 +38,9 @@ class _OnePanAppView extends ConsumerWidget {
     return MaterialApp.router(
       title: 'OnePan',
       theme: AppTheme.light(),
+      // Force light mode regardless of system setting
+      themeMode: ThemeMode.light,
+      // Keep dark theme defined for future use, but not active now
       darkTheme: AppTheme.dark(),
       routerConfig: router,
     );

@@ -108,7 +108,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ],
       ),
       GoRoute(
-        path: Routes.customize,
+        path: '${Routes.customize}/:id',
         name: 'customize',
         builder: (context, state) => const CustomizeScreen(),
       ),
