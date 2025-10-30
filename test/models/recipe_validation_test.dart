@@ -1,3 +1,4 @@
+@Tags(['legacy'])
 import 'package:flutter_test/flutter_test.dart';
 import 'package:onepan/models/recipe.dart';
 

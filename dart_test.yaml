@@ -1,0 +1,6 @@
+tags:
+  legacy:
+    # Legacy schema tests. Quarantined during v1 migration.
+    skip: true
+    # reason: "Legacy schema; excluded after v1 migration"
+

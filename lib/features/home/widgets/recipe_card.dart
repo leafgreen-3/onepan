@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:onepan/models/recipe.dart';
+import 'package:onepan/data/models/recipe.dart';
 import 'package:onepan/theme/tokens.dart';
 
 class RecipeCard extends StatelessWidget {
@@ -36,7 +36,7 @@ class RecipeCard extends StatelessWidget {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                _RecipeImage(title: recipe.title, imageUrl: recipe.image),
+                _RecipeImage(title: recipe.title, imageAsset: recipe.imageAsset),
                 DecoratedBox(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -67,7 +67,7 @@ class RecipeCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: AppSpacing.lg),
-                      _TimeBadge(minutes: recipe.minutes),
+                      _TimeBadge(minutes: recipe.timeTotalMin),
                     ],
                   ),
                 ),
@@ -92,33 +92,25 @@ class RecipeCard extends StatelessWidget {
 class _RecipeImage extends StatelessWidget {
   const _RecipeImage({
     required this.title,
-    required this.imageUrl,
+    required this.imageAsset,
   });
 
   final String title;
-  final String? imageUrl;
+  final String imageAsset;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
 
-    if (imageUrl == null || imageUrl!.isEmpty) {
+    if (imageAsset.isEmpty) {
       return _PlaceholderImage(colorScheme: scheme);
     }
 
-    return Image.network(
-      imageUrl!,
+    return Image.asset(
+      imageAsset,
       fit: BoxFit.cover,
       semanticLabel: 'Recipe image: $title',
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) {
-          return child;
-        }
-        return _PlaceholderImage(colorScheme: scheme);
-      },
-      errorBuilder: (context, _, __) {
-        return _PlaceholderImage(colorScheme: scheme);
-      },
+      errorBuilder: (context, _, __) => _PlaceholderImage(colorScheme: scheme),
     );
   }
 }

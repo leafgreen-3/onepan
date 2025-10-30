@@ -39,7 +39,8 @@ class Ingredient {
     return Ingredient(
       id: (json['id'] ?? '') as String,
       name: (json['name'] ?? '') as String,
-      qty: (json['qty'] as num?)?.toDouble() ?? 0,
+      // JSON number coercion: accept int or double
+      qty: (json['qty'] as num).toDouble(),
       unit: (json['unit'] ?? '') as String,
       category: (json['category'] ?? '') as String,
       thumbAsset: json['thumbAsset'] as String?,

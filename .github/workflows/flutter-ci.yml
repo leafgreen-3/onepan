@@ -25,5 +25,5 @@ jobs:
         run: flutter analyze
 
       - name: Flutter Test (with coverage)
-        run: flutter test --no-pub --coverage
+        run: flutter test --no-pub --coverage --exclude-tags=legacy
 

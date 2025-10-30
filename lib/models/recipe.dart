@@ -1,3 +1,4 @@
+// TODO(legacy): Remove after MVP once all references are gone.
 import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';

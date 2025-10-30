@@ -13,11 +13,32 @@ class StepItem {
   final int? temperatureC;
 
   factory StepItem.fromJson(Map<String, dynamic> json) {
+    final Object? rawNum = json['num'];
+    final int stepNum = rawNum is int
+        ? rawNum
+        : rawNum is double
+            ? rawNum.toInt()
+            : 0;
+
+    final Object? rawTimer = json['timerSec'];
+    final int? stepTimer = rawTimer is int
+        ? rawTimer
+        : rawTimer is double
+            ? rawTimer.toInt()
+            : null;
+
+    final Object? rawTemp = json['temperatureC'];
+    final int? stepTemp = rawTemp is int
+        ? rawTemp
+        : rawTemp is double
+            ? rawTemp.toInt()
+            : null;
+
     return StepItem(
-      num: (json['num'] as num?)?.toInt() ?? 0,
+      num: stepNum,
       text: (json['text'] ?? '') as String,
-      timerSec: (json['timerSec'] as num?)?.toInt(),
-      temperatureC: (json['temperatureC'] as num?)?.toInt(),
+      timerSec: stepTimer,
+      temperatureC: stepTemp,
     );
   }
 

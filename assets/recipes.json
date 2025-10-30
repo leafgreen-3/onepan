@@ -8,7 +8,7 @@
     "imageAsset": "assets/images/recipes/chickpea-spinach-onepan.png",
     "imageUrl": "",
     "ingredients": [
-      {"id": "oil-olive", "name": "Olive oil", "qty": 1, "unit": "tbsp", "category": "core"},
+      {"id": "oil-olive", "name": "Olive oil", "qty": 1, "unit": "tbsp", "category": "core", "thumbAsset": "assets/images/ingredients/oil-olive.png"},
       {"id": "onion-yellow", "name": "Yellow onion", "qty": 120, "unit": "g", "category": "vegetable"},
       {"id": "garlic", "name": "Garlic cloves", "qty": 2, "unit": "piece", "category": "spice"},
       {"id": "chickpea", "name": "Cooked chickpeas", "qty": 240, "unit": "g", "category": "protein"},
@@ -83,7 +83,7 @@
     "imageAsset": "assets/images/recipes/smoky-black-bean-skillet.png",
     "imageUrl": "",
     "ingredients": [
-      {"id": "oil-olive", "name": "Olive oil", "qty": 1, "unit": "tbsp", "category": "core"},
+      {"id": "oil-olive", "name": "Olive oil", "qty": 1, "unit": "tbsp", "category": "core", "thumbAsset": "assets/images/ingredients/oil-olive.png"},
       {"id": "bell-pepper", "name": "Bell pepper", "qty": 150, "unit": "g", "category": "vegetable"},
       {"id": "corn", "name": "Sweet corn kernels", "qty": 160, "unit": "g", "category": "vegetable"},
       {"id": "black-beans", "name": "Cooked black beans", "qty": 260, "unit": "g", "category": "protein"},
@@ -107,7 +107,7 @@
     "imageAsset": "assets/images/recipes/herb-chicken-potato-skillet.png",
     "imageUrl": "",
     "ingredients": [
-      {"id": "oil-olive", "name": "Olive oil", "qty": 1, "unit": "tbsp", "category": "core"},
+      {"id": "oil-olive", "name": "Olive oil", "qty": 1, "unit": "tbsp", "category": "core", "thumbAsset": "assets/images/ingredients/oil-olive.png"},
       {"id": "chicken-thigh", "name": "Boneless chicken thighs", "qty": 400, "unit": "g", "category": "protein"},
       {"id": "potato", "name": "Baby potatoes", "qty": 320, "unit": "g", "category": "vegetable"},
       {"id": "rosemary", "name": "Fresh rosemary", "qty": 1, "unit": "tbsp", "category": "spice"},

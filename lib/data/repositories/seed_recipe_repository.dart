@@ -2,7 +2,8 @@ import '../models/recipe.dart';
 import '../sources/local/seed_loader.dart';
 import 'recipe_repository.dart';
 
-const FAST_THRESHOLD_MIN = 25;
+/// Recipes with timeTotalMin <= kFastThresholdMin are considered "fast".
+const kFastThresholdMin = 25;
 
 /// Recipe repository backed by bundled seed data.
 class SeedRecipeRepository implements RecipeRepository {
@@ -40,9 +41,9 @@ class SeedRecipeRepository implements RecipeRepository {
     if (timeMode != null && timeMode.isNotEmpty) {
       final normalized = timeMode.toLowerCase();
       if (normalized == 'fast') {
-        results = results.where((recipe) => recipe.timeTotalMin <= FAST_THRESHOLD_MIN);
+        results = results.where((recipe) => recipe.timeTotalMin <= kFastThresholdMin);
       } else if (normalized == 'regular') {
-        results = results.where((recipe) => recipe.timeTotalMin > FAST_THRESHOLD_MIN);
+        results = results.where((recipe) => recipe.timeTotalMin > kFastThresholdMin);
       }
     }
 

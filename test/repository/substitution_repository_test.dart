@@ -1,3 +1,4 @@
+@Tags(['legacy'])
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';

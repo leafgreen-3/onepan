@@ -1,3 +1,4 @@
+// TODO(legacy): Remove after MVP once all references are gone.
 import 'package:onepan/data/recipe_loader.dart';
 import 'package:onepan/models/recipe.dart';
 import 'package:onepan/repository/recipe_repository.dart';

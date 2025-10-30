@@ -109,13 +109,13 @@ void main() {
   test('filters by fast time mode', () async {
     final recipes = await repository.list(timeMode: 'fast');
     expect(recipes.map((recipe) => recipe.id), containsAll(['veg-quick', 'nonveg-fast']));
-    expect(recipes.every((recipe) => recipe.timeTotalMin <= FAST_THRESHOLD_MIN), isTrue);
+    expect(recipes.every((recipe) => recipe.timeTotalMin <= kFastThresholdMin), isTrue);
   });
 
   test('filters by regular time mode', () async {
     final recipes = await repository.list(timeMode: 'regular');
     expect(recipes.map((recipe) => recipe.id), containsAll(['veg-medium', 'nonveg-regular']));
-    expect(recipes.every((recipe) => recipe.timeTotalMin > FAST_THRESHOLD_MIN), isTrue);
+    expect(recipes.every((recipe) => recipe.timeTotalMin > kFastThresholdMin), isTrue);
   });
 
   test('getById returns recipe when found', () async {
