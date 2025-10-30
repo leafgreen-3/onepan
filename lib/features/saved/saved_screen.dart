@@ -8,8 +8,8 @@ import 'package:onepan/theme/tokens.dart';
 import 'package:onepan/ui/atoms/app_button.dart';
 import 'package:onepan/ui/atoms/app_skeleton.dart';
 
-class HomeScreen extends ConsumerWidget {
-  const HomeScreen({super.key});
+class SavedScreen extends ConsumerWidget {
+  const SavedScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,18 +20,17 @@ class HomeScreen extends ConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const _HomeHeader(),
+            const _SavedHeader(),
             Expanded(
               child: state.recipes.when(
                 data: (recipes) {
-                  if (recipes.isEmpty) {
-                    return _EmptyState(
-                      message: 'Fresh recipes are on the way.',
-                      action: AppButton(
-                        label: 'Refresh',
-                        onPressed: () => controller.refresh(),
-                        variant: AppButtonVariant.tonal,
-                      ),
+                  final savedRecipes = recipes
+                      .where((recipe) => state.favorites.contains(recipe.id))
+                      .toList();
+
+                  if (savedRecipes.isEmpty) {
+                    return _EmptySaved(
+                      onFindRecipes: () => context.go(Routes.home),
                     );
                   }
 
@@ -45,14 +44,14 @@ class HomeScreen extends ConsumerWidget {
                         AppSpacing.xl,
                       ),
                       physics: const AlwaysScrollableScrollPhysics(),
-                      itemCount: recipes.length,
+                      itemCount: savedRecipes.length,
                       itemBuilder: (context, index) {
-                        final recipe = recipes[index];
-                        final isFavorite = state.favorites.contains(recipe.id);
+                        final recipe = savedRecipes[index];
                         return RecipeCard(
                           recipe: recipe,
-                          isFavorite: isFavorite,
-                          onTap: () => context.push('${Routes.recipe}/${recipe.id}'),
+                          isFavorite: true,
+                          onTap: () =>
+                              context.push('${Routes.recipe}/${recipe.id}'),
                           onToggleFavorite: () =>
                               controller.toggleFavorite(recipe.id),
                         );
@@ -62,9 +61,8 @@ class HomeScreen extends ConsumerWidget {
                     ),
                   );
                 },
-                loading: () => const _LoadingList(),
-                error: (error, _) => _ErrorState(
-                  message: 'We could not load recipes right now.',
+                loading: () => const _SavedLoadingList(),
+                error: (error, _) => _SavedError(
                   onRetry: () => controller.refresh(),
                 ),
               ),
@@ -76,8 +74,8 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-class _HomeHeader extends StatelessWidget {
-  const _HomeHeader();
+class _SavedHeader extends StatelessWidget {
+  const _SavedHeader();
 
   @override
   Widget build(BuildContext context) {
@@ -90,42 +88,21 @@ class _HomeHeader extends StatelessWidget {
         AppSpacing.xl,
         AppSpacing.md,
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              'OnePan',
-              style: AppTextStyles.display.copyWith(
-                color: scheme.onSurface,
-              ),
-            ),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          'Saved',
+          style: AppTextStyles.display.copyWith(
+            color: scheme.onSurface,
           ),
-          IconButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: const Text('Search is coming soon.'),
-                  duration: AppDurations.fast,
-                ),
-              );
-            },
-            icon: const Icon(Icons.search),
-            iconSize: AppSizes.icon,
-            padding: const EdgeInsets.all(AppSpacing.sm),
-            constraints: const BoxConstraints(
-              minWidth: AppSizes.minTouchTarget,
-              minHeight: AppSizes.minTouchTarget,
-            ),
-            tooltip: 'Search recipes',
-          ),
-        ],
+        ),
       ),
     );
   }
 }
 
-class _LoadingList extends StatelessWidget {
-  const _LoadingList();
+class _SavedLoadingList extends StatelessWidget {
+  const _SavedLoadingList();
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +113,7 @@ class _LoadingList extends StatelessWidget {
         AppSpacing.xl,
         AppSpacing.xl,
       ),
-      itemBuilder: (context, index) => const _RecipeCardSkeleton(),
+      itemBuilder: (context, index) => const _SavedSkeletonCard(),
       separatorBuilder: (context, index) =>
           const SizedBox(height: AppSpacing.xl),
       itemCount: 3,
@@ -144,8 +121,8 @@ class _LoadingList extends StatelessWidget {
   }
 }
 
-class _RecipeCardSkeleton extends StatelessWidget {
-  const _RecipeCardSkeleton();
+class _SavedSkeletonCard extends StatelessWidget {
+  const _SavedSkeletonCard();
 
   @override
   Widget build(BuildContext context) {
@@ -164,14 +141,10 @@ class _RecipeCardSkeleton extends StatelessWidget {
   }
 }
 
-class _EmptyState extends StatelessWidget {
-  const _EmptyState({
-    required this.message,
-    this.action,
-  });
+class _EmptySaved extends StatelessWidget {
+  const _EmptySaved({required this.onFindRecipes});
 
-  final String message;
-  final Widget? action;
+  final VoidCallback onFindRecipes;
 
   @override
   Widget build(BuildContext context) {
@@ -184,23 +157,24 @@ class _EmptyState extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.local_dining,
+              Icons.favorite_border,
               size: AppSizes.icon,
               color:
                   scheme.onSurface.withValues(alpha: AppOpacity.mediumText),
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
-              message,
+              'You haven\'t saved any recipes yet.',
               textAlign: TextAlign.center,
               style: AppTextStyles.title.copyWith(
                 color: scheme.onSurface,
               ),
             ),
-            if (action != null) ...[
-              const SizedBox(height: AppSpacing.lg),
-              action!,
-            ],
+            const SizedBox(height: AppSpacing.lg),
+            AppButton(
+              label: 'Find recipes',
+              onPressed: onFindRecipes,
+            ),
           ],
         ),
       ),
@@ -208,13 +182,9 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
-class _ErrorState extends StatelessWidget {
-  const _ErrorState({
-    required this.message,
-    required this.onRetry,
-  });
+class _SavedError extends StatelessWidget {
+  const _SavedError({required this.onRetry});
 
-  final String message;
   final VoidCallback onRetry;
 
   @override
@@ -235,7 +205,7 @@ class _ErrorState extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
-              message,
+              'We can\'t show your saved recipes right now.',
               textAlign: TextAlign.center,
               style: AppTextStyles.title.copyWith(
                 color: scheme.onSurface,

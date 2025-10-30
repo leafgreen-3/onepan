@@ -8,6 +8,8 @@ class Routes {
   static const onboardingLevel = '/onboarding/level';
   static const onboardingDiet = '/onboarding/diet';
   static const home = '/home';
+  static const saved = '/saved';
+  static const settings = '/settings';
   static const customize = '/customize';
   static const ingredients = '/ingredients';
   static const finalizer = '/finalizer';
