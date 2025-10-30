@@ -28,6 +28,7 @@ class HomeScreen extends ConsumerWidget {
                     return _EmptyState(
                       message: 'Fresh recipes are on the way.',
                       action: AppButton(
+                        key: const Key('home_refresh_button'),
                         label: 'Refresh',
                         onPressed: () => controller.refresh(),
                         variant: AppButtonVariant.tonal,
@@ -50,6 +51,7 @@ class HomeScreen extends ConsumerWidget {
                         final recipe = recipes[index];
                         final isFavorite = state.favorites.contains(recipe.id);
                         return RecipeCard(
+                          key: Key('recipe_card_${recipe.id}'),
                           recipe: recipe,
                           isFavorite: isFavorite,
                           onTap: () => context.push('${Routes.recipe}/${recipe.id}'),
@@ -104,7 +106,7 @@ class _HomeHeader extends StatelessWidget {
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: const Text('Search is coming soon.'),
+                  content: Text('Search is coming soon.'),
                   duration: AppDurations.fast,
                 ),
               );
@@ -130,6 +132,7 @@ class _LoadingList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      key: const Key('home_loading_skeleton'),
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.xl,
         AppSpacing.lg,
@@ -191,6 +194,7 @@ class _EmptyState extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
+              key: const Key('home_empty_message'),
               message,
               textAlign: TextAlign.center,
               style: AppTextStyles.title.copyWith(
@@ -235,6 +239,7 @@ class _ErrorState extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
+              key: const Key('home_error_message'),
               message,
               textAlign: TextAlign.center,
               style: AppTextStyles.title.copyWith(
@@ -245,6 +250,7 @@ class _ErrorState extends StatelessWidget {
             AppButton(
               label: 'Try again',
               onPressed: onRetry,
+              key: const Key('home_retry_button'),
             ),
           ],
         ),
