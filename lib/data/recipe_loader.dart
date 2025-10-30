@@ -1,3 +1,4 @@
+// TODO(legacy): Remove after MVP once all references are gone.
 import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;

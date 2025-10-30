@@ -9,7 +9,7 @@ Run the following to set up and verify locally:
 ```sh
 flutter pub get
 flutter analyze
-flutter test
+flutter test --exclude-tags=legacy
 flutter run
 ```
 
@@ -45,7 +45,7 @@ Routes (go_router)
 - `/customize` → CustomizeScreen
 - `/ingredients` → IngredientsScreen
 - `/finalizer` → FinalizerScreen
-- `/recipe` → RecipeScreen
+- `/recipe/:id` -> RecipeScreen
 
 Dependencies
 - Routing: `go_router`
@@ -54,25 +54,25 @@ Dependencies
 Screenshot/GIF
 - [Placeholder: architecture-shell.png]
 
-## Data Layer
+## Data Layer (Schema v1)
 
-- Seeds & Loader — Curated seed recipes live in `assets/recipes.json` for fast, deterministic development. They validate against Schema v1 (`lib/models/recipe.dart`) when loaded through the loader utility, which aggregates per-item validation errors with indices. A tiny dev list/detail flow exists to preview this data end-to-end without the full UI. See docs for details:
-  - docs/data/seeds_and_loader.md
-  - docs/dev/seed_preview_routes.md
+- Seeds & Loader � Curated seed recipes live in assets/recipes.json for fast, deterministic development. They validate against Schema v1 models in lib/data/models/* when loaded through the seed loader, which aggregates per-item validation errors with indices.
+  - Models (v1): lib/data/models/{recipe.dart, ingredient.dart, step.dart}
+  - Loader: lib/data/sources/local/seed_loader.dart
+  - Seed JSON: assets/recipes.json
 
 ### Repositories
-- RecipeRepository (seed-backed)
-  - Interface: `lib/repository/recipe_repository.dart`
-  - Default impl: `SeedRecipeRepository` reads curated seeds via loader, caches in memory, and supports simple filters (`maxMinutes`, `maxSpice`).
-  - Impl: `lib/repository/seed_recipe_repository.dart`
-- SubstitutionRepository (deterministic mock)
-  - Interface: `lib/repository/substitution_repository.dart`
-  - Default impl: `MockSubstitutionRepository` is deterministic: given the same request it returns the exact same response, seeded by a stable hash of normalized inputs.
-  - Impl: `lib/repository/mock_substitution_repository.dart`
+- RecipeRepository (seed-backed, v1)
+  - Interface: lib/data/repositories/recipe_repository.dart
+  - Impl: lib/data/repositories/seed_recipe_repository.dart (loads once; sorts by timeTotalMin then title; filters by diet and timeMode fast/regular).
+- Legacy substitution mock remains under lib/repository/* and is tagged for removal post-MVP.
 
-UI depends on these interfaces via DI and is source-agnostic. Repositories are registered in `lib/di/locator.dart` and consumed via `locator<Interface>()`.
+UI depends on these interfaces via DI and is source-agnostic. Repositories are registered in lib/di/locator.dart and consumed via locator<Interface>() or Riverpod providers.
 
-## Component Library
+### Viewing seeds in the app
+- Complete onboarding (Country -> Level -> Diet) to reach Home.
+- Tap a recipe card to open the Ingredient Picker.
+- Ingredient Picker shows a thumbnail, name, quantity, and a checkbox per ingredient, plus a Next button to Steps.## Component Library
 
 OnePan ships a small, token-only component library for building consistent UI quickly. All atoms use design tokens from `lib/theme/tokens.dart` and colors/typography from the active `ThemeData` — no raw numbers or hex values inside widgets.
 
@@ -136,3 +136,6 @@ Screenshot/GIF
 - [Placeholder: onboarding-country.png]
 - [Placeholder: onboarding-level.png]
 - [Placeholder: onboarding-diet.png]
+
+
+

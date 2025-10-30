@@ -7,11 +7,13 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:onepan/features/home/home_screen.dart';
-import 'package:onepan/models/recipe.dart';
-import 'package:onepan/repository/recipe_repository.dart';
+import 'package:onepan/data/models/recipe.dart' as v1;
+import 'package:onepan/data/models/ingredient.dart' as v1;
+import 'package:onepan/data/models/step.dart' as v1;
+import 'package:onepan/data/repositories/recipe_repository.dart' as v1;
 import 'package:onepan/router/routes.dart';
 
-class _MockRecipeRepository extends Mock implements RecipeRepository {}
+class _MockRecipeRepository extends Mock implements v1.RecipeRepository {}
 
 Widget _buildRouterApp(Widget home) {
   final router = GoRouter(
@@ -44,15 +46,25 @@ Widget _buildRouterApp(Widget home) {
   );
 }
 
-Recipe makeRecipe({String id = 'r1', String title = 'Chickpea OnePan'}) => Recipe(
+v1.Recipe makeRecipe({String id = 'r1', String title = 'Chickpea OnePan'}) => v1.Recipe(
+      schemaVersion: 1,
       id: id,
       title: title,
-      minutes: 22,
-      servings: 2,
-      spice: SpiceLevel.mild,
-      image: null,
-      ingredients: const ['a'],
-      steps: const ['b'],
+      timeTotalMin: 22,
+      diet: 'veg',
+      imageAsset: 'assets/images/recipes/$id.png',
+      ingredients: const [
+        v1.Ingredient(
+          id: 'oil',
+          name: 'Oil',
+          qty: 1,
+          unit: 'tbsp',
+          category: 'core',
+        ),
+      ],
+      steps: const [
+        v1.StepItem(num: 1, text: 'Cook'),
+      ],
     );
 
 void main() {
@@ -62,7 +74,7 @@ void main() {
   setUp(() async {
     await getIt.reset();
     repo = _MockRecipeRepository();
-    getIt.registerSingleton<RecipeRepository>(repo);
+    getIt.registerSingleton<v1.RecipeRepository>(repo);
   });
 
   tearDown(() async {
@@ -71,7 +83,7 @@ void main() {
 
   group('HomeScreen', () {
     testWidgets('loading state shows loading skeleton', (tester) async {
-      final completer = Completer<List<Recipe>>();
+      final completer = Completer<List<v1.Recipe>>();
       when(() => repo.list()).thenAnswer((_) => completer.future);
 
       await tester.pumpWidget(_buildRouterApp(const HomeScreen()));
@@ -81,7 +93,7 @@ void main() {
     });
 
     testWidgets('empty state shows message and refresh; tapping refresh re-calls list()', (tester) async {
-      when(() => repo.list()).thenAnswer((_) async => <Recipe>[]);
+      when(() => repo.list()).thenAnswer((_) async => <v1.Recipe>[]);
 
       await tester.pumpWidget(_buildRouterApp(const HomeScreen()));
       await tester.pumpAndSettle();

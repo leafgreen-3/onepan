@@ -3,10 +3,9 @@ import 'package:get_it/get_it.dart';
 
 import 'package:onepan/app/services/preferences_service.dart';
 import 'package:onepan/app/state/onboarding_state.dart';
-import 'package:onepan/repository/mock_substitution_repository.dart';
-import 'package:onepan/repository/seed_recipe_repository.dart';
-import 'package:onepan/repository/recipe_repository.dart';
-import 'package:onepan/repository/substitution_repository.dart';
+import 'package:onepan/data/sources/local/seed_loader.dart';
+import 'package:onepan/data/repositories/seed_recipe_repository.dart' as v1;
+import 'package:onepan/data/repositories/recipe_repository.dart' as v1;
 
 // Toggle for substitution repository. True => use mock implementation.
 const bool kUseMockSubstitution = true;
@@ -14,24 +13,14 @@ const bool kUseMockSubstitution = true;
 final GetIt getIt = GetIt.instance;
 
 void setupLocator() {
-  // Recipe repository (seeded from assets)
-  if (!getIt.isRegistered<RecipeRepository>()) {
-    getIt.registerLazySingleton<RecipeRepository>(() => SeedRecipeRepository());
+  // Recipe repository (v1 schema, seeded from assets)
+  if (!getIt.isRegistered<v1.RecipeRepository>()) {
+    final loader = SeedLoader();
+    getIt.registerLazySingleton<v1.RecipeRepository>(() => v1.SeedRecipeRepository(seedLoader: loader));
   }
 
-  // Substitution repository
-  if (!getIt.isRegistered<SubstitutionRepository>()) {
-    if (kUseMockSubstitution) {
-      getIt.registerLazySingleton<SubstitutionRepository>(
-        () => MockSubstitutionRepository(recipes: getIt<RecipeRepository>()),
-      );
-    } else {
-      // Future real implementation; fallback to mock for now
-      getIt.registerLazySingleton<SubstitutionRepository>(
-        () => MockSubstitutionRepository(recipes: getIt<RecipeRepository>()),
-      );
-    }
-  }
+  // TODO(legacy): Substitution repository wiring depends on legacy schema.
+  // Remove/replace after MVP when v1-compatible substitution is available.
 }
 
 // Convenience accessor to keep UI concise and source-agnostic.

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:onepan/di/locator.dart';
-import 'package:onepan/models/recipe.dart';
-import 'package:onepan/repository/recipe_repository.dart';
+import 'package:onepan/data/models/recipe.dart';
+import 'package:onepan/data/repositories/recipe_repository.dart';
 
 final homeControllerProvider =
     StateNotifierProvider<HomeController, HomeState>((ref) {
