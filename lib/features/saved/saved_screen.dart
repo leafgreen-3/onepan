@@ -51,7 +51,7 @@ class SavedScreen extends ConsumerWidget {
                           recipe: recipe,
                           isFavorite: true,
                           onTap: () =>
-                              context.go('${Routes.recipe}/${recipe.id}'),
+                              context.push('${Routes.recipe}/${recipe.id}'),
                           onToggleFavorite: () =>
                               controller.toggleFavorite(recipe.id),
                         );

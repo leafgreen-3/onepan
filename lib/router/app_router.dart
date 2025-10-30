@@ -125,6 +125,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '${Routes.recipe}/:id',
         name: 'recipe',
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const RecipeScreen(),
       ),
       GoRoute(

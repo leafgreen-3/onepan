@@ -44,7 +44,7 @@ class SettingsScreen extends ConsumerWidget {
                     final messenger = ScaffoldMessenger.of(context);
                     await preferences.clearOnboarding();
                     messenger.showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content: const Text('Onboarding has been reset.'),
                         duration: AppDurations.normal,
                       ),

@@ -52,7 +52,7 @@ class HomeScreen extends ConsumerWidget {
                         return RecipeCard(
                           recipe: recipe,
                           isFavorite: isFavorite,
-                          onTap: () => context.go('${Routes.recipe}/${recipe.id}'),
+                          onTap: () => context.push('${Routes.recipe}/${recipe.id}'),
                           onToggleFavorite: () =>
                               controller.toggleFavorite(recipe.id),
                         );
@@ -103,7 +103,7 @@ class _HomeHeader extends StatelessWidget {
           IconButton(
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                const SnackBar(
                   content: const Text('Search is coming soon.'),
                   duration: AppDurations.fast,
                 ),
