@@ -1,3 +1,7 @@
+## [Unreleased]
+
+- Added: Home Screen tests (loading/empty/error/data, refresh/retry, navigation, favorite toggle).
+
 ## 0.1.0
 
 - Added design tokens under `lib/theme/tokens.dart` (colors, typography, spacing, radii, elevations).

@@ -45,7 +45,7 @@ class SettingsScreen extends ConsumerWidget {
                     await preferences.clearOnboarding();
                     messenger.showSnackBar(
                       const SnackBar(
-                        content: const Text('Onboarding has been reset.'),
+                        content: Text('Onboarding has been reset.'),
                         duration: AppDurations.normal,
                       ),
                     );

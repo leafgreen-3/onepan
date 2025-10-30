@@ -75,6 +75,7 @@ class RecipeCard extends StatelessWidget {
                   top: AppSpacing.lg,
                   right: AppSpacing.lg,
                   child: _FavoriteButton(
+                    key: Key('favorite_${recipe.id}'),
                     isFavorite: isFavorite,
                     onPressed: onToggleFavorite,
                   ),
@@ -178,6 +179,7 @@ class _TimeBadge extends StatelessWidget {
 
 class _FavoriteButton extends StatelessWidget {
   const _FavoriteButton({
+    super.key,
     required this.isFavorite,
     required this.onPressed,
   });
