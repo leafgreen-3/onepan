@@ -9,6 +9,7 @@ class ChecklistTile extends StatelessWidget {
     required this.checked,
     required this.onChanged,
     this.leading,
+    this.checkboxKey,
   });
 
   final String title;
@@ -16,6 +17,7 @@ class ChecklistTile extends StatelessWidget {
   final bool checked;
   final ValueChanged<bool> onChanged;
   final Widget? leading;
+  final Key? checkboxKey;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class ChecklistTile extends StatelessWidget {
     final subtitleStyle = Theme.of(context).textTheme.bodyMedium;
 
     final trailing = Checkbox(
+      key: checkboxKey,
       value: checked,
       onChanged: (_) => onChanged(!checked),
       side: BorderSide(color: scheme.outline),

@@ -9,7 +9,7 @@ import 'package:onepan/features/finalizer/finalizer_screen.dart';
 import 'package:onepan/features/home/home_screen.dart';
 import 'package:onepan/features/ingredients/ingredients_screen.dart';
 import 'package:onepan/features/onboarding/onboarding_screen.dart';
-import 'package:onepan/features/recipe/recipe_screen.dart';
+import 'package:onepan/features/instructions/instructions_screen.dart';
 import 'package:onepan/features/saved/saved_screen.dart';
 import 'package:onepan/features/settings/settings_screen.dart';
 import 'package:onepan/models/recipe.dart';
@@ -125,8 +125,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '${Routes.recipe}/:id',
         name: 'recipe',
-        parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => const RecipeScreen(),
+        builder: (context, state) => const InstructionsScreen(),
       ),
       GoRoute(
         path: Routes.devRecipes,
