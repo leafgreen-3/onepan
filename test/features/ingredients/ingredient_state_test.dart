@@ -20,8 +20,8 @@ void main() {
 
   group('filteredGroupsProvider', () {
     test('empty search returns original groups; non-empty returns results', () async {
-      final ingA = const v1.Ingredient(id: 'garlic', name: 'Garlic', qty: 1, unit: 'piece', category: 'spice');
-      final ingB = const v1.Ingredient(id: 'spinach', name: 'Spinach', qty: 1, unit: 'cup', category: 'vegetable');
+      const ingA = v1.Ingredient(id: 'garlic', name: 'Garlic', qty: 1, unit: 'piece', category: 'spice');
+      const ingB = v1.Ingredient(id: 'spinach', name: 'Spinach', qty: 1, unit: 'cup', category: 'vegetable');
       final index = IngredientIndex(
         all: [ingA, ingB],
         groups: [

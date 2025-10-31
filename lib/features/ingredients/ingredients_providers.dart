@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:onepan/di/locator.dart';
-import 'package:onepan/data/models/ingredient.dart' as v1;
 import 'package:onepan/data/repositories/recipe_repository.dart' as v1;
 import 'ingredient_index.dart';
 

@@ -42,14 +42,14 @@ void main() {
   });
 
   testWidgets('headers toggle collapse and expand; search bypasses collapse', (tester) async {
-    final ingredients = const [
+    const ingredients = [
       v1.Ingredient(id: 'oil-olive', name: 'Olive oil', qty: 1, unit: 'tbsp', category: 'core'),
       v1.Ingredient(id: 'tofu-firm', name: 'Tofu', qty: 1, unit: 'piece', category: 'protein'),
       v1.Ingredient(id: 'spinach', name: 'Spinach', qty: 1, unit: 'cup', category: 'vegetable'),
       v1.Ingredient(id: 'garlic', name: 'Garlic', qty: 1, unit: 'piece', category: 'spice'),
       v1.Ingredient(id: 'miso', name: 'Miso', qty: 1, unit: 'tbsp', category: 'other'),
     ];
-    final recipe = v1.Recipe(
+    const recipe = v1.Recipe(
       schemaVersion: 1,
       id: 'r1',
       title: 'Demo',
@@ -57,7 +57,7 @@ void main() {
       diet: 'veg',
       imageAsset: 'x',
       ingredients: ingredients,
-      steps: const [v1.StepItem(num: 1, text: 's')],
+      steps: [v1.StepItem(num: 1, text: 's')],
     );
 
     when(() => repo.list()).thenAnswer((_) async => [recipe]);

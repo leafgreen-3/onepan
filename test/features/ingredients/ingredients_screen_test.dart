@@ -8,8 +8,6 @@ import 'package:onepan/data/models/ingredient.dart' as v1;
 import 'package:onepan/data/models/recipe.dart' as v1;
 import 'package:onepan/data/models/step.dart' as v1;
 import 'package:onepan/data/repositories/recipe_repository.dart' as v1;
-import 'package:onepan/features/ingredients/ingredient_index.dart';
-import 'package:onepan/features/ingredients/ingredients_providers.dart';
 import 'package:onepan/features/ingredients/ingredients_screen.dart';
 
 class _MockRecipeRepository extends Mock implements v1.RecipeRepository {}
@@ -68,13 +66,13 @@ void main() {
   });
 
   testWidgets('Ingredients screen shows headers, search -> results, Next payload', (tester) async {
-    final ingredients = const [
+    const ingredients = [
       v1.Ingredient(id: 'garlic', name: 'Garlic', qty: 1, unit: 'piece', category: 'spice'),
       v1.Ingredient(id: 'onion-yellow', name: 'Yellow onion', qty: 1, unit: 'piece', category: 'vegetable'),
       v1.Ingredient(id: 'oil-olive', name: 'Olive oil', qty: 1, unit: 'tbsp', category: 'core'),
       v1.Ingredient(id: 'spinach', name: 'Spinach', qty: 1, unit: 'cup', category: 'vegetable'),
     ];
-    final recipe = v1.Recipe(
+    const recipe = v1.Recipe(
       schemaVersion: 1,
       id: 'r1',
       title: 'r1',
@@ -82,15 +80,15 @@ void main() {
       diet: 'veg',
       imageAsset: 'x',
       ingredients: ingredients,
-      steps: const [v1.StepItem(num: 1, text: 's')],
+      steps: [v1.StepItem(num: 1, text: 's')],
     );
 
     when(() => repo.list()).thenAnswer((_) async => [recipe]);
     when(() => repo.getById('r1')).thenAnswer((_) async => recipe);
 
     // Build index from repo via provider
-    final app = ProviderScope(
-      overrides: const [],
+    const app = ProviderScope(
+      overrides: [],
       child: IngredientsScreen(),
     );
 
