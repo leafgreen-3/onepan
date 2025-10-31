@@ -15,12 +15,18 @@ class CustomizeScreen extends ConsumerWidget {
     final ctrl = ref.read(customizeStateProvider(id).notifier);
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text('Customize'),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.xl),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.xl,
+            AppSpacing.xl,
+            AppSpacing.xl,
+            AppSpacing.xl,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -55,24 +61,36 @@ class CustomizeScreen extends ConsumerWidget {
                 ),
               ),
 
-              const Spacer(),
-
-              AppButton(
-                key: const Key('customize_next'),
-                label: 'Next',
-                expand: true,
-                onPressed: () {
-                  // Navigate to the ingredient picker with payload via extra
-                  context.push(
-                    '/ingredients',
-                    extra: {
-                      'recipeId': id,
-                      'customize': model,
-                    },
-                  );
-                },
-              ),
+              const SizedBox(height: AppSpacing.xl),
             ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: AnimatedPadding(
+          duration: AppDurations.normal,
+          curve: Curves.easeOut,
+          padding: EdgeInsets.only(
+            left: AppSpacing.xl,
+            right: AppSpacing.xl,
+            top: AppSpacing.md,
+            bottom: AppSpacing.lg + MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: AppButton(
+            key: const Key('customize_next'),
+            label: 'Next',
+            expand: true,
+            onPressed: () {
+              // Navigate to the ingredient picker with payload via extra
+              context.push(
+                '/ingredients',
+                extra: {
+                  'recipeId': id,
+                  'customize': model,
+                },
+              );
+            },
           ),
         ),
       ),
