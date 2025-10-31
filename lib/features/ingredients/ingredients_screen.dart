@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:onepan/data/models/recipe.dart' as model_v1;
 import 'package:onepan/features/ingredients/ingredients_providers.dart';
 import 'package:onepan/features/ingredients/ingredient_index.dart';
+import 'package:onepan/features/ingredients/ingredient_utils.dart';
 import 'package:onepan/features/recipe/recipe_providers.dart';
 import 'package:onepan/theme/tokens.dart';
 import 'package:onepan/ui/atoms/app_button.dart';
@@ -17,7 +18,6 @@ class IngredientsScreen extends ConsumerWidget {
     final groups = ref.watch(filteredGroupsProvider);
     final selected = ref.watch(selectedIngredientIdsProvider);
     final setSelected = ref.read(selectedIngredientIdsProvider.notifier);
-    final indexAsync = ref.watch(ingredientIndexProvider);
 
     // Expect payload: { recipeId, customize }
     final extra = GoRouterState.of(context).extra;
@@ -100,7 +100,7 @@ class IngredientsScreen extends ConsumerWidget {
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stackTrace) => Center(
+                error: (error, stackTrace) => const Center(
                   child: Text('Could not load recipe'),
                 ),
               ),
@@ -118,19 +118,20 @@ class IngredientsScreen extends ConsumerWidget {
             label: 'Next',
             expand: true,
             onPressed: () async {
+              // Capture router before any await to avoid context-after-await lint.
+              final router = GoRouter.of(context);
               // Compute available/missing using selected ids and recipe ingredients
               final availableIds = selected.toList(growable: false);
               final id = recipeId ?? '';
               final recipe = (id.isNotEmpty)
                   ? await ref.read(recipeByIdProvider(id).future)
                   : null;
-              final missingIds = (recipe?.ingredients
-                          .map((e) => e.id)
-                          .where((id) => !availableIds.contains(id))
-                          .toList(growable: false)) ??
-                  const <String>[];
+              final missingIds = computeMissingIds(
+                recipeIngredients: recipe?.ingredients.map((e) => e.id).toList() ?? const <String>[],
+                availableIds: availableIds,
+              );
 
-              context.push('/finalizer', extra: {
+              router.push('/finalizer', extra: {
                 'recipeId': id,
                 'customize': customize,
                 'availableIds': availableIds,
@@ -277,7 +278,7 @@ class _GroupSection extends ConsumerWidget {
     final collapsed = isSearchMode
         ? false
         : (ref.watch(collapseStateProvider(null))[groupName] == false);
-    final toggle = () =>
+    void toggle() =>
         ref.read(collapseStateProvider(null).notifier).toggle(groupName);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

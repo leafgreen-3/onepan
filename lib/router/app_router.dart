@@ -253,6 +253,10 @@ class _NavItem extends StatelessWidget {
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   label,
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.fade,
+                  textHeightBehavior: const TextHeightBehavior(applyHeightToLastDescent: false),
                   style: AppTextStyles.label.copyWith(color: color),
                 ),
               ],
