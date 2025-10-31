@@ -213,7 +213,7 @@ class _SearchFieldStatefulState extends ConsumerState<_SearchFieldStateful> {
   }
 }
 
-class _GroupsList extends StatelessWidget {
+class _GroupsList extends ConsumerWidget {
   const _GroupsList({
     required this.groups,
     required this.selectedIds,
@@ -225,34 +225,38 @@ class _GroupsList extends StatelessWidget {
   final ValueChanged<String> onToggle;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (groups.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
+    final query = ref.watch(searchQueryProvider).trim();
     return ListView.builder(
       padding: const EdgeInsets.only(bottom: AppSpacing.xl),
       itemCount: groups.length,
       itemBuilder: (context, index) {
         final g = groups[index];
+        final isSearch = query.isNotEmpty && g.key == 'header_results';
         return _GroupSection(
           headerKey: g.key,
           title: g.title,
           items: g.items,
           selectedIds: selectedIds,
           onToggle: onToggle,
+          isSearchMode: isSearch,
         );
       },
     );
   }
 }
 
-class _GroupSection extends StatelessWidget {
+class _GroupSection extends ConsumerWidget {
   const _GroupSection({
     required this.headerKey,
     required this.title,
     required this.items,
     required this.selectedIds,
     required this.onToggle,
+    this.isSearchMode = false,
   });
 
   final String headerKey;
@@ -260,41 +264,76 @@ class _GroupSection extends StatelessWidget {
   final List<dynamic> items; // v1.Ingredient
   final Set<String> selectedIds;
   final ValueChanged<String> onToggle;
+  final bool isSearchMode;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
+    final groupName = headerKey.startsWith('header_')
+        ? headerKey.substring('header_'.length)
+        : headerKey;
+    final collapsed = isSearchMode
+        ? false
+        : (ref.watch(collapseStateProvider(null))[groupName] == false);
+    final toggle = () =>
+        ref.read(collapseStateProvider(null).notifier).toggle(groupName);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.xl,
-            AppSpacing.lg,
-            AppSpacing.xl,
-            AppSpacing.sm,
-          ),
-          child: Text(
-            title,
-            key: Key(headerKey),
-            style: AppTextStyles.title.copyWith(color: scheme.onSurface),
+        GestureDetector(
+          key: Key('toggle_$groupName'),
+          behavior: HitTestBehavior.opaque,
+          onTap: isSearchMode ? null : toggle,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.xl,
+              AppSpacing.lg,
+              AppSpacing.xl,
+              AppSpacing.sm,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    key: Key(headerKey),
+                    style: AppTextStyles.title.copyWith(color: scheme.onSurface),
+                  ),
+                ),
+                if (!isSearchMode)
+                  AnimatedRotation(
+                    duration: const Duration(milliseconds: 200),
+                    turns: collapsed ? -0.25 : 0.0, // right when collapsed, down when expanded
+                    child: Icon(
+                      Icons.expand_more,
+                      color: scheme.onSurface.withValues(alpha: AppOpacity.mediumText),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
         Material(
           color: scheme.surface,
           elevation: AppElevation.e1,
-          child: Column(
-            children: [
-              for (final dynamic it in items)
-                _IngredientRow(
-                  id: it.id as String,
-                  title: it.name as String,
-                  thumbAsset: (it.thumbAsset as String?) ??
-                      'assets/images/ingredients/placeholder.png',
-                  checked: selectedIds.contains(it.id as String),
-                  onChanged: () => onToggle(it.id as String),
-                ),
-            ],
+          child: AnimatedSize(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+            child: collapsed
+                ? const SizedBox.shrink()
+                : Column(
+                    children: [
+                      for (final dynamic it in items)
+                        _IngredientRow(
+                          id: it.id as String,
+                          title: it.name as String,
+                          thumbAsset: (it.thumbAsset as String?) ??
+                              'assets/images/ingredients/placeholder.png',
+                          checked: selectedIds.contains(it.id as String),
+                          onChanged: () => onToggle(it.id as String),
+                        ),
+                    ],
+                  ),
           ),
         ),
       ],

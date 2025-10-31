@@ -64,3 +64,23 @@ final filteredGroupsProvider = Provider<List<IngredientGroup>>((ref) {
   );
 });
 
+// Collapse state for groups
+class CollapseController extends StateNotifier<Map<String, bool>> {
+  CollapseController(super.state);
+
+  void toggle(String group) {
+    final current = state[group] ?? true;
+    state = {...state, group: !current};
+  }
+}
+
+final collapseStateProvider = StateNotifierProvider.autoDispose
+    .family<CollapseController, Map<String, bool>, void>((ref, _) {
+  return CollapseController({
+    'core': true, // default expanded
+    'protein': true,
+    'vegetable': true,
+    'spice': true,
+    'other': true,
+  });
+});
