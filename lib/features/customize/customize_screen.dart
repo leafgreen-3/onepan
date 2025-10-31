@@ -62,8 +62,14 @@ class CustomizeScreen extends ConsumerWidget {
                 label: 'Next',
                 expand: true,
                 onPressed: () {
-                  // Navigate to the original ingredient picker screen (Recipe)
-                  context.push('/recipe/$id');
+                  // Navigate to the ingredient picker with payload via extra
+                  context.push(
+                    '/ingredients',
+                    extra: {
+                      'recipeId': id,
+                      'customize': model,
+                    },
+                  );
                 },
               ),
             ],

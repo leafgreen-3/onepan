@@ -13,15 +13,10 @@ Widget _buildRouterApp({required String initialLocation}) {
         builder: (context, state) => const CustomizeScreen(),
       ),
       GoRoute(
-        path: '/recipe/:id',
+        path: '/ingredients',
         builder: (context, state) {
-          final id = state.pathParameters['id']!;
-          return Scaffold(
-            appBar: AppBar(title: const Text('Recipe')),
-            body: Center(
-              key: Key('recipe_detail_$id'),
-              child: Text('Recipe: $id'),
-            ),
+          return const Scaffold(
+            body: Center(child: Text('Ingredients')),
           );
         },
       ),
@@ -78,7 +73,7 @@ void main() {
       await tester.tap(find.byKey(const Key('customize_next')));
       await tester.pumpAndSettle();
 
-      expect(find.byKey(const Key('recipe_detail_r1')), findsOneWidget);
+      expect(find.text('Ingredients'), findsOneWidget);
     });
   });
 }
