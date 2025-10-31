@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:onepan/data/repositories/recipe_repository.dart' as v1;
 import 'package:onepan/data/models/recipe.dart' as model_v1;
-import 'package:onepan/di/locator.dart';
 import 'package:onepan/features/ingredients/ingredients_providers.dart';
 import 'package:onepan/features/ingredients/ingredient_index.dart';
+import 'package:onepan/features/recipe/recipe_providers.dart';
 import 'package:onepan/theme/tokens.dart';
 import 'package:onepan/ui/atoms/app_button.dart';
 import 'package:onepan/ui/atoms/checklist_tile.dart';
@@ -25,10 +24,10 @@ class IngredientsScreen extends ConsumerWidget {
     final payload = (extra is Map) ? extra : const {};
     final recipeId = payload['recipeId'] as String?;
     final customize = payload['customize'];
-    final repo = locator<v1.RecipeRepository>();
-    final futureRecipe = (recipeId != null && recipeId.isNotEmpty)
-        ? repo.getById(recipeId)
-        : Future.value(null);
+    final AsyncValue<model_v1.Recipe?> recipeAsync =
+        (recipeId != null && recipeId.isNotEmpty)
+            ? ref.watch(recipeByIdProvider(recipeId))
+            : const AsyncValue<model_v1.Recipe?>.data(null);
 
     // Default selection: select core items once after index loads (avoid mutating during build)
     ref.listen(ingredientIndexProvider, (prev, next) {
@@ -64,10 +63,8 @@ class IngredientsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: AppSpacing.md),
             Expanded(
-              child: FutureBuilder<model_v1.Recipe?>(
-                future: futureRecipe,
-                builder: (context, snapshot) {
-                  final recipe = snapshot.data;
+              child: recipeAsync.when(
+                data: (recipe) {
                   List<IngredientGroup> visible = groups;
                   if (recipe != null) {
                     final idSet = recipe.ingredients.map((e) => e.id).toSet();
@@ -102,6 +99,10 @@ class IngredientsScreen extends ConsumerWidget {
                     onToggle: (id) => setSelected.toggle(id),
                   );
                 },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, stackTrace) => Center(
+                  child: Text('Could not load recipe'),
+                ),
               ),
             ),
           ],
@@ -119,9 +120,10 @@ class IngredientsScreen extends ConsumerWidget {
             onPressed: () async {
               // Compute available/missing using selected ids and recipe ingredients
               final availableIds = selected.toList(growable: false);
-              final repo = locator<v1.RecipeRepository>();
               final id = recipeId ?? '';
-              final recipe = await repo.getById(id);
+              final recipe = (id.isNotEmpty)
+                  ? await ref.read(recipeByIdProvider(id).future)
+                  : null;
               final missingIds = (recipe?.ingredients
                           .map((e) => e.id)
                           .where((id) => !availableIds.contains(id))
