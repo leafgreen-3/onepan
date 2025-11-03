@@ -62,7 +62,7 @@ Inputs:
 
 Servings (– / +).
 
-Time toggle (⚡ Fast / ⏳ Regular).
+Time toggle (⏳ Regular / ⚡ Fast ).
 
 Spice level slider (🌶 Mild, Medium, Spicy).
 
