@@ -140,7 +140,7 @@ void main() {
       expect(callCount, greaterThanOrEqualTo(2));
     });
 
-    testWidgets('data state renders one card and navigates to customize first', (tester) async {
+    testWidgets('data state renders one card and navigates to mode choice first', (tester) async {
       when(() => repo.list()).thenAnswer((_) async => [makeRecipe(id: 'r1')]);
 
       await tester.pumpWidget(_buildRouterApp(const HomeScreen()));
@@ -152,7 +152,7 @@ void main() {
       await tester.tap(cardFinder);
       await tester.pumpAndSettle();
 
-      expect(find.byKey(const Key('customize_r1')), findsOneWidget);
+      expect(find.byKey(const Key('recipe_detail_r1')), findsOneWidget);
     });
 
     testWidgets('favorite toggle updates icon state', (tester) async {

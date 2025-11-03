@@ -27,7 +27,19 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final textStyle = Theme.of(context).textTheme.labelLarge;
+    Color labelColor;
+    switch (variant) {
+      case AppButtonVariant.filled:
+        labelColor = scheme.onPrimary;
+        break;
+      case AppButtonVariant.tonal:
+        labelColor = scheme.onPrimaryContainer;
+        break;
+      case AppButtonVariant.text:
+        labelColor = scheme.primary;
+        break;
+    }
+    final TextStyle textStyle = AppTextStyles.label.copyWith(color: labelColor);
 
     final bool enabled = onPressed != null && !loading;
     final VoidCallback? effectiveOnPressed = enabled ? onPressed : null;

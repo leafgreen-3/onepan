@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:onepan/data/models/recipe.dart' as model_v1;
 import 'package:onepan/features/ingredients/ingredients_providers.dart';
+import 'package:onepan/features/ingredients/state/selected_ingredients_provider.dart' as picked;
 import 'package:onepan/features/ingredients/ingredient_index.dart';
 import 'package:onepan/features/ingredients/ingredient_utils.dart';
 import 'package:onepan/features/recipe/recipe_providers.dart';
 import 'package:onepan/theme/tokens.dart';
+import 'package:onepan/router/routes.dart';
 import 'package:onepan/ui/atoms/app_button.dart';
 import 'package:onepan/ui/atoms/checklist_tile.dart';
 
@@ -16,29 +18,46 @@ class IngredientsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final groups = ref.watch(filteredGroupsProvider);
-    final selected = ref.watch(selectedIngredientIdsProvider);
-    final setSelected = ref.read(selectedIngredientIdsProvider.notifier);
 
-    // Expect payload: { recipeId, customize }
-    final extra = GoRouterState.of(context).extra;
+    // Expect payload: optional extras and/or path param id
+    final state = GoRouterState.of(context);
+    final extra = state.extra;
     final payload = (extra is Map) ? extra : const {};
-    final recipeId = payload['recipeId'] as String?;
+    final recipeId = (state.pathParameters['id'] ?? payload['recipeId']) as String?;
     final customize = payload['customize'];
     final AsyncValue<model_v1.Recipe?> recipeAsync =
         (recipeId != null && recipeId.isNotEmpty)
             ? ref.watch(recipeByIdProvider(recipeId))
             : const AsyncValue<model_v1.Recipe?>.data(null);
 
+    // Selected ids for this recipe (persisted across AI flow). Fallback to
+    // ephemeral selection provider if recipe id is missing (tests/legacy).
+    final Set<String> selected = (recipeId != null && recipeId.isNotEmpty)
+        ? ref.watch(picked.selectedIngredientIdsProvider(recipeId))
+        : ref.watch(selectedIngredientIdsProvider);
+
     // Default selection: select core items once after index loads (avoid mutating during build)
     ref.listen(ingredientIndexProvider, (prev, next) {
       next.whenData((index) {
-        final current = ref.read(selectedIngredientIdsProvider);
-        if (current.isEmpty) {
-          final core = index.groups.firstWhere(
-            (g) => g.key == 'header_core',
-            orElse: () => IngredientGroup(key: 'header_core', title: 'Core', items: const []),
-          );
-          ref.read(selectedIngredientIdsProvider.notifier).setAll(core.items.map((e) => e.id));
+        if (recipeId != null && recipeId.isNotEmpty) {
+          final current = ref.read(picked.selectedIngredientIdsProvider(recipeId));
+          if (current.isEmpty) {
+            final core = index.groups.firstWhere(
+              (g) => g.key == 'header_core',
+              orElse: () => IngredientGroup(key: 'header_core', title: 'Core', items: const []),
+            );
+            ref.read(picked.selectedIngredientIdsProvider(recipeId).notifier).state =
+                core.items.map((e) => e.id).toSet();
+          }
+        } else {
+          final ephemeral = ref.read(selectedIngredientIdsProvider);
+          if (ephemeral.isEmpty) {
+            final core = index.groups.firstWhere(
+              (g) => g.key == 'header_core',
+              orElse: () => IngredientGroup(key: 'header_core', title: 'Core', items: const []),
+            );
+            ref.read(selectedIngredientIdsProvider.notifier).setAll(core.items.map((e) => e.id));
+          }
         }
       });
     });
@@ -96,7 +115,22 @@ class IngredientsScreen extends ConsumerWidget {
                   return _GroupsList(
                     groups: visible,
                     selectedIds: selected,
-                    onToggle: (id) => setSelected.toggle(id),
+                    onToggle: (id) {
+                      if (recipeId != null && recipeId.isNotEmpty) {
+                        final current = ref.read(picked.selectedIngredientIdsProvider(recipeId));
+                        final next = {...current};
+                        if (next.contains(id)) {
+                          next.remove(id);
+                        } else {
+                          next.add(id);
+                        }
+                        ref
+                            .read(picked.selectedIngredientIdsProvider(recipeId).notifier)
+                            .state = next;
+                      } else {
+                        ref.read(selectedIngredientIdsProvider.notifier).toggle(id);
+                      }
+                    },
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
@@ -131,7 +165,7 @@ class IngredientsScreen extends ConsumerWidget {
                 availableIds: availableIds,
               );
 
-              router.push('/finalizer', extra: {
+              router.push('${Routes.finalizer}/$id', extra: {
                 'recipeId': id,
                 'customize': customize,
                 'availableIds': availableIds,

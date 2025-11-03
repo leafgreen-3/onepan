@@ -15,15 +15,15 @@ class _MockRepo extends Mock implements v1.RecipeRepository {}
 
 Widget _app(Widget page, {required Map<String, dynamic> extra}) {
   final router = GoRouter(
-    initialLocation: '/ingredients',
+    initialLocation: '/ingredients/${extra['recipeId'] ?? 'r1'}',
     routes: [
       GoRoute(
-        path: '/ingredients',
+        path: '/ingredients/:id',
         builder: (context, state) => ProviderScope(child: page),
       ),
     ],
   );
-  router.go('/ingredients', extra: extra);
+  router.go('/ingredients/${extra['recipeId'] ?? 'r1'}', extra: extra);
   return MaterialApp.router(routerConfig: router);
 }
 

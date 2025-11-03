@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:onepan/features/customize/customize_providers.dart';
 import 'package:onepan/theme/tokens.dart';
+import 'package:onepan/router/routes.dart';
 import 'package:onepan/ui/atoms/app_button.dart';
 
 class CustomizeScreen extends ConsumerWidget {
@@ -84,7 +85,7 @@ class CustomizeScreen extends ConsumerWidget {
             onPressed: () {
               // Navigate to the ingredient picker with payload via extra
               context.push(
-                '/ingredients',
+                '${Routes.ingredients}/$id',
                 extra: {
                   'recipeId': id,
                   'customize': model,

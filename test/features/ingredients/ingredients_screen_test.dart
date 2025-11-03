@@ -14,20 +14,20 @@ class _MockRecipeRepository extends Mock implements v1.RecipeRepository {}
 
 Widget _buildRouterApp({required Widget home, required Map<String, dynamic> extra}) {
   final router = GoRouter(
-    initialLocation: '/ingredients',
+    initialLocation: '/ingredients/r1',
     routes: [
       GoRoute(
-        path: '/ingredients',
+        path: '/ingredients/:id',
         builder: (context, state) => ProviderScope(
           overrides: const [],
           child: home,
         ),
       ),
       GoRoute(
-        path: '/finalizer',
+        path: '/finalizer/:id',
         builder: (context, state) {
           final payload = state.extra as Map<String, dynamic>? ?? const {};
-          final recipeId = payload['recipeId'] ?? '';
+          final recipeId = state.pathParameters['id'] ?? '';
           final available = (payload['availableIds'] as List?)?.join(',') ?? '';
           final missing = (payload['missingIds'] as List?)?.join(',') ?? '';
           return Scaffold(
@@ -46,7 +46,7 @@ Widget _buildRouterApp({required Widget home, required Map<String, dynamic> extr
   );
 
   // Navigate with extra before build
-  router.go('/ingredients', extra: extra);
+  router.go('/ingredients/${extra['recipeId'] ?? 'r1'}', extra: extra);
 
   return MaterialApp.router(routerConfig: router);
 }

@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:onepan/theme/tokens.dart';
 import 'package:onepan/ui/atoms/app_button.dart';
+import 'package:onepan/router/routes.dart';
 
 class FinalizerScreen extends StatelessWidget {
   const FinalizerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final extra = GoRouterState.of(context).extra;
-    final payload = (extra is Map) ? extra : const {};
-    final recipeId = payload['recipeId'] as String?;
+    final state = GoRouterState.of(context);
+    final idFromPath = state.pathParameters['id'];
+    final recipeId = (idFromPath ??
+            ((state.extra is Map) ? (state.extra as Map)['recipeId'] as String? : null)) ??
+        '';
 
     return Scaffold(
       appBar: AppBar(title: const Text('Finalize')),
@@ -20,14 +23,13 @@ class FinalizerScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Finalizer'),
+              const Text('No AI call yet — mock only'),
               const SizedBox(height: AppSpacing.lg),
-              if (recipeId != null && recipeId.isNotEmpty)
+              if (recipeId.isNotEmpty)
                 AppButton(
-                  label: 'Start Cooking',
+                  label: 'Continue to Recipe',
                   onPressed: () {
-                    // Navigate to instructions route
-                    context.push('/recipe/$recipeId');
+                    context.pushReplacement('${Routes.recipe}/$recipeId/view?mode=ai');
                   },
                 )
               else

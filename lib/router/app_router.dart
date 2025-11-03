@@ -10,6 +10,7 @@ import 'package:onepan/features/home/home_screen.dart';
 import 'package:onepan/features/ingredients/ingredients_screen.dart';
 import 'package:onepan/features/onboarding/onboarding_screen.dart';
 import 'package:onepan/features/instructions/instructions_screen.dart';
+import 'package:onepan/features/recipe/recipe_mode.dart';
 import 'package:onepan/features/saved/saved_screen.dart';
 import 'package:onepan/features/settings/settings_screen.dart';
 import 'package:onepan/models/recipe.dart';
@@ -18,6 +19,7 @@ import 'package:onepan/router/routes.dart';
 import 'package:onepan/screens/dev/recipe_detail_screen.dart';
 import 'package:onepan/screens/dev/recipes_list_screen.dart';
 import 'package:onepan/theme/tokens.dart';
+import 'package:onepan/features/recipe/recipe_mode_choice_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -113,19 +115,34 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const CustomizeScreen(),
       ),
       GoRoute(
-        path: Routes.ingredients,
+        path: '${Routes.ingredients}/:id',
         name: 'ingredients',
         builder: (context, state) => const IngredientsScreen(),
       ),
       GoRoute(
-        path: Routes.finalizer,
+        path: '${Routes.finalizer}/:id',
         name: 'finalizer',
         builder: (context, state) => const FinalizerScreen(),
       ),
       GoRoute(
         path: '${Routes.recipe}/:id',
         name: 'recipe',
-        builder: (context, state) => const InstructionsScreen(),
+        builder: (context, state) {
+          final recipeId = state.pathParameters['id']!;
+          return RecipeModeChoiceScreen(recipeId: recipeId);
+        },
+        routes: [
+          GoRoute(
+            path: 'view',
+            name: Routes.recipeView,
+            builder: (context, state) {
+              final recipeId = state.pathParameters['id']!;
+              final mode =
+                  RecipeModeX.fromQuery(state.uri.queryParameters['mode']);
+              return InstructionsScreen(recipeId: recipeId, mode: mode);
+            },
+          ),
+        ],
       ),
       GoRoute(
         path: Routes.devRecipes,
