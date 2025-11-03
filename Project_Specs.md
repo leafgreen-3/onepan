@@ -1,183 +1,224 @@
-OnePan — Product Specification (MVP)
-1. Vision & Value Proposition
+# OnePan — Product Specification (v1.1)
+_Last updated: 2025-11-03_
 
-Goal: Build a mobile app that acts as a UI layer between humans and LLMs for cooking, focused entirely on OnePan recipes — simple, fast dishes that use only one pan or pot.
+---
 
-Why OnePan:
+## 1. Overview
+**OnePan** is a minimalist mobile app for one-pan recipes — quick, simple meals that use a single piece of cookware.
+It combines a UI‑first cooking experience with an optional AI Mode. In AI Mode, the app performs two LLM calls: (1) ingredient substitutions and (2) final recipe generation/adaptation.
 
-Narrow scope ensures consistency, speed, and low cognitive load.
+### MVP Goal
+Deliver an Android‑ready Flutter app where users can:
+- Browse one‑pan recipes (seeded, local JSON)
+- Choose between Simple Mode (instant static recipe) and AI Mode (customized ingredients)
+- View ingredients, steps, and save recipes locally
 
-Perfect entry point for testing structured recipe generation and customization.
+---
 
-Simplifies LLM prompt logic and reduces risk of inconsistent steps or equipment.
+## 2. Core User Flow (with Optional AI Mode)
+Onboarding
+→ Homepage
+→ Recipe Page (Mode Choice) → View Recipe (Simple) or Personalize (AI)
 
-MVP Focus:
+- Simple View path: Homepage → Recipe Page → Recipe (static)
+- AI Mode path: Homepage → Recipe Page → Customization → Ingredient Picker → Ingredient Finalizer (LLM Call 1) → Recipe Generation (LLM Call 2) → Recipe (customized)
 
-Crisp UI for selecting, customizing, and finalizing OnePan recipes.
+Notes
+- AI Mode is opt‑in and clearly labeled.
+- Single LLM call occurs after Ingredient Picker on the Finalizer step.
+- No free‑text input anywhere; UI collects structured params only.
 
-Ingredient-based personalization without free-text input.
+---
 
-Clear, minimal LLM interaction — one-cycle substitutions and optional step adaptation.
+## 3. Screen Specifications
 
-2. Core Pages (MVP Flow)
-Page 1: Onboarding
-
-Purpose: Collect minimal context for tailoring recipes.
-
+### 1) Onboarding
+Purpose: Collect minimal user context.
 Inputs:
+- Country → grid of continents → country list with flags
+- Cooking Level (Beginner / Intermediate / Confident)
+- Diet (Veg / Non‑Veg)
+Action: “Continue” → Homepage
+UI: 3 steps, friendly microcopy, warm background (#FAF6F3)
 
-Country → searchable dropdown with flags OR grid of continents → then country list with flags.
+### 2) Homepage
+Purpose: Browse starter recipes.
+UI:
+- 2‑column grid of recipe cards: image, name, ⏱ cooking time
+- Tabs: Home | Saved | Settings
+Data: Local JSON file with 5–10 one‑pan recipes
+Action: Tap card → Recipe (Simple) or Personalize (AI)
 
-Cooking Level (Beginner / Intermediate / Confident; icons).
+### 3) Recipe Page (Mode Choice)
+Purpose: Let users view the base recipe or opt into AI personalization.
+UI:
+- Hero image, title, short description
+- Primary CTA: “View Recipe” (Simple)
+- Secondary CTA: “Personalize with AI” (beta) → Customization
+Note: Simple = instant; AI runs background calls (see Integration).
 
-Diet (Veg / Non-Veg).
-
-Notes:
-
-Only three required fields to minimize friction.
-
-No equipment questions needed (all recipes are OnePan by default).
-
-Page 2: Homepage
-
-Purpose: Display starting set of OnePan recipes.
-
-UI Elements:
-
-Recipe Cards: image + recipe name + cooking time.
-
-Tabs: Home | Saved Recipes | Settings.
-
-Data Source:
-
-3–10 pre-curated OnePan recipes (static JSON or local data).
-
-Each card leads to the customization step.
-
-Page 3: Customization
-
-Purpose: Collect user constraints before generating or adapting the recipe.
-
+### 4) Customization
+Purpose: Gather user preferences before LLM generation.
 Inputs:
+- Servings (− / +)
+- Time mode (Fast / Regular)
+- Spice level (Mild / Medium / Spicy)
+CTA: “Next → Ingredients”
+Design: 3 rounded beige cards (#F7EDE2), one per setting; sticky button bottom
+Next: Ingredient Picker
 
-Servings (– / +).
+### 5) Ingredient Picker
+Purpose: Collect what ingredients user has.
+UI:
+- Organized checklist with icons
+- Groups: Core (fixed top), Protein, Vegetable, Spice, Other
+- Search: add from pre‑approved ingredient list
+Action: User selects available items → presses “Personalize with AI”
+Next: Ingredient Finalizer (LLM Call 1 happens here)
 
-Time toggle (⏳ Regular / ⚡ Fast ).
+### 6) Ingredient Finalizer (AI Result)
+Purpose: Present suggested swaps/omissions for missing items based on user availability.
+Input: LLM Call 1 using recipe ID, params, and availability.
+UI:
+- Revised ingredient list with substitutions clearly marked (from → to, with note)
+- User confirms final list
+Fallback: On timeout/invalid schema, revert to base ingredients
+Next: Recipe Generation (LLM Call 2) → Recipe (customized view)
 
-Spice level slider (🌶 Mild, Medium, Spicy).
+### 7) Recipe (View)
+Purpose: Display the final recipe to cook (static in Simple mode, customized in AI mode).
+UI:
+- Tabs: Ingredients | Steps
+- Inline ⏱ time badges
+- Tap ingredient → quantity tooltip
+- “Save Recipe” and “Customize Again”
+Note: In AI Mode, steps/time reflect results from LLM Call 2.
 
-Notes:
+---
 
-Only these three parameters are supported in MVP.
+## 4. Mode Logic
 
-These are passed as structured parameters to the LLM.
+| Mode      | Source       | LLM Use                | Flow End             |
+|-----------|--------------|------------------------|----------------------|
+| Simple    | Local JSON   | None                   | Static recipe view   |
+| AI Mode   | Local JSON + LLM | 2 calls (Finalizer + Recipe Gen) | Customized recipe    |
 
-Page 4: Ingredient Picker
+---
 
-Purpose: Let users confirm which ingredients they have.
+## 5. LLM Integration Points
 
-UI Elements:
+Call 1 — Ingredient Substitution (Finalizer)
+- When: After Ingredient Picker, on Finalizer
+- Input: `recipeId`, `params`, `availableIds[]`, `missingIds[]`
+- Output: `finalIngredients: Ingredient[]`, `substitutions: { from, to, note }[]`
+- Validation: Strict schema check before rendering; invalid → fallback to base
+- Timeout: 8s with one retry; on failure → fallback to base
+- Caching: Keyed by `recipeId + params + availableIds + missingIds` (order‑independent)
 
-Organized checklist with icons (fallback icon for generic items like spices).
+Call 2 — Recipe Generation/Adaptation
+- When: After Finalizer confirmation, before showing Recipe (customized)
+- Input: `recipeId`, `params`, `finalIngredients: Ingredient[]`
+- Output: `steps: Step[]`, `timeTotalMin: number`
+- Validation: Must conform to Schema v1 field rules
+- Timeout: 8s with one retry; on failure → show base steps/time with finalized ingredients
 
-Core ingredients fixed at the start, followed by grouped categories:
+Param Structure (UI → repository)
+```jsonc
+{
+  "recipeId": "lemon-garlic-shrimp-orzo",
+  "params": {
+    "servings": 2,
+    "timeMode": "fast",
+    "spice": "medium"
+  },
+  "availableIds": ["shrimp", "garlic", "orzo"],
+  "missingIds": ["broth"]
+}
+```
 
-Protein / Vegetables / Spices / Others.
+Response (Finalizer)
+```jsonc
+{
+  "finalIngredients": [ { "id": "shrimp", "name": "Raw shrimp", "qty": 250, "unit": "g", "category": "protein" } ],
+  "substitutions": [
+    { "from": "butter", "to": "olive oil", "note": "availability-based" }
+  ]
+}
+```
 
-User checks/unchecks items to mark what’s available.
+Response (Recipe Generation)
+```jsonc
+{
+  "steps": [ { "num": 1, "text": "Heat oil.", "timerSec": 30 }, { "num": 2, "text": "Simmer orzo in broth." } ],
+  "timeTotalMin": 22
+}
+```
 
-Optional search bar for adding from a pre-approved ingredient list.
+---
 
-Notes:
+## 6. Data Model (MVP, Schema v1)
+The app uses a versioned schema for seed data and AI output. Both Simple and AI modes MUST conform to the same shape.
 
-No substitutions displayed here.
+Recipe (v1)
+```jsonc
+{
+  "schemaVersion": 1,
+  "id": "lemon-garlic-shrimp-orzo",
+  "title": "Lemon Garlic Shrimp Orzo",
+  "timeTotalMin": 24,
+  "diet": "nonveg",            // one of: "veg", "nonveg"
+  "imageAsset": "assets/images/recipes/lemon-garlic-shrimp-orzo.png",
+  "imageUrl": "",               // optional; may be empty string
+  "ingredients": [
+    {
+      "id": "shrimp",
+      "name": "Raw shrimp",
+      "qty": 250,
+      "unit": "g",             // one of: g, ml, tbsp, tsp, cup, piece
+      "category": "protein",   // one of: core, protein, vegetable, spice, other
+      "thumbAsset": null,        // optional
+      "thumbUrl": null           // optional
+    }
+  ],
+  "steps": [
+    { "num": 1, "text": "Saute garlic for 30 seconds.", "timerSec": 30 },
+    { "num": 2, "text": "Simmer orzo in broth until tender." }
+  ]
+}
+```
 
-This screen collects availability data for the next step.
+Validation Rules (enforced in code)
+- `schemaVersion` must be 1
+- `diet` in {`veg`, `nonveg`}
+- `timeTotalMin` > 0
+- Ingredient `unit` in {`g`, `ml`, `tbsp`, `tsp`, `cup`, `piece`}
+- Ingredient `category` in {`core`, `protein`, `vegetable`, `spice`, `other`}
+- Step fields: `num` > 0, `text` non‑empty, optional `timerSec` and `temperatureC` ≥ 0 when present
 
-Page 5: Ingredient Finalizer
+---
 
-Purpose: Generate and present substitution options for missing items.
+## 7. Visual & UX Guidelines
 
-LLM Touchpoint #1:
+Design style: Apple Health minimalism + Pinterest warmth.
 
-Input: Base recipe + customization parameters + user’s available/unavailable ingredients.
+Color palette:
+- Base #FAF6F3
+- Card #F7EDE2
+- Accent #E27D60 (terracotta)
+- Text #2F2F2F
 
-Output: Updated list with suggested swaps or omissions.
+Typography: Poppins / Manrope; large, comfortable sizes.
+Spacing: Generous; round corners 16dp; large tap targets.
+Motion: Gentle ease‑out transitions; calm loading screens.
 
-UI Elements:
+---
 
-Display revised ingredient list with substitutions clearly marked.
+## 8. UX Rules
 
-User can review and confirm before moving to the recipe.
-
-Notes:
-
-One-cycle processing — no real-time substitution.
-
-All substitutions must maintain OnePan compatibility.
-
-Page 6: Recipe
-
-Purpose: Present the customized OnePan recipe for cooking.
-
-LLM Touchpoint #2 (Optional for MVP):
-
-Input: Final ingredient list + customization parameters.
-
-Output: Adapted cooking steps (scaled servings, adjusted times, spice levels).
-
-UI Elements:
-
-Tabs: Ingredients | Steps.
-
-Continuous scroll view (no step-by-step cook mode yet).
-
-Inline time indicators (⏱).
-
-Tapping or holding an ingredient reveals its quantity instantly, avoiding tab switching.
-
-Buttons: “Save Recipe” and “Customize.”
-
-Notes:
-
-Recipe steps should assume a single pan or pot for all actions.
-
-No timers, notifications, or multimedia at this stage.
-
-3. LLM Integration (MVP Contracts)
-
-When Used:
-
-Ingredient Finalizer (substitution suggestions).
-
-(Optional) Recipe adaptation (step adjustment).
-
-Format:
-
-Strict structured schema (RecipeMeta, Ingredients[], Steps[]).
-
-Schema validation required before rendering UI.
-
-Constraints:
-
-No user free-text input.
-
-All parameters are generated from UI elements (toggles, sliders, checkboxes).
-
-Model must adhere to OnePan constraint — no multiple equipment references.
-
-4. Key UX Decisions
-
-Scope Limitation: All recipes are OnePan by default; no equipment filtering or variation needed.
-
-Ingredient Picker: Organized by category; core items fixed at top.
-
-Substitution Flow: One-cycle (Page 4 → Page 5).
-
-Recipe View: Continuous scroll layout.
-
-Ingredient Quantities: Tapping an ingredient shows its quantity inline.
-
-Customization Options: Servings, time, and spice only.
-
-LLM Usage: Minimal and controlled; structured prompts only.
+- One primary action per screen.
+- No free‑text user input.
+- Must preserve “one‑pan only” logic in all recipes.
+- Simple = instant; AI = optional + labeled “beta”.
+- Same schema drives both Simple and AI recipes.
+- Accessibility: generous tap targets, readable type, calm motion.
+- Caching & Fallbacks: cache successful AI results by key; on LLM failure, revert to base recipe.

@@ -1,109 +1,87 @@
-# OnePan — Flutter MVP Project Plan (LLM-Assisted)
-
-## 0) North Star & Constraints
-
-* **Goal:** Ship a stable Android MVP of OnePan with a crisp UI, OnePan-only recipe flow, and minimal, structured LLM integration.
-* **Time/Scope:** UI-first, 6 screens, static curated recipes + one-cycle substitution; optional step adaptation.
-* **LLM Collaboration:** Code is largely LLM-generated; humans provide specs, reviews, and acceptance criteria.
-* **Compatibility Principle:** Design contracts (data + UI) first; code against contracts; keep adapters replaceable.
+# OnePan — Flutter Project Plan (v1.1)
+_Last updated: 2025-11-03_
 
 ---
 
-## 1) Architecture & Folder Layout (future-friendly)
+## 0) North Star & Scope
 
-**Pattern:** Presentation–Domain–Data with clear boundaries, minimal ceremony.
+- Goal: Ship a stable Android build with a crisp, token-driven UI and an optional AI Mode that personalizes ingredients and generates final steps.
+- Modes:
+  - Simple Mode: Static seeded recipes (no LLM).
+  - AI Mode: Two LLM calls — Call 1: Ingredient Finalizer; Call 2: Recipe Generation/Adaptation.
+- Contracts-first: Freeze Schema v1; validate at runtime; both modes use the same schema.
+- No free-text input; UI collects structured params only.
+- One-pan constraint across all content.
+
+---
+
+## 1) Architecture & Folder Layout (grounded in repo)
+
+Pattern: Presentation + Data with swappable repositories and DI via Riverpod.
 
 ```
 lib/
   app/
-    app.dart             // MaterialApp + GoRouter + theme
-    di.dart              // Providers for dependencies (Riverpod)
-    theme/
-      colors.dart        // design tokens (hex palette)
-      typography.dart    // text styles
-      spacing.dart       // paddings, radii, elevations
-      theme.dart         // ThemeData factory
+    app.dart               // MaterialApp + theme
+    providers.dart         // top-level providers
+    services/
+      preferences_service.dart
   core/
-    error.dart           // failure types
-    result.dart          // Result<T>
-    utils.dart           // formatters, extensions
-    constants.dart
-  features/
-    onboarding/
-      ui/                // screens, widgets
-      state/
-      domain/
-    home/
-    customize/
-    ingredients/
-    finalizer/
-    recipe/
+    seed_load_exception.dart
   data/
-    models/              // DTOs (RecipeDto, IngredientDto, StepDto)
-    repositories/        // RecipeRepository, SubstitutionRepository
+    models/                // v1 DTOs (Recipe, Ingredient, StepItem)
+    repositories/          // RecipeRepository, SeedRecipeRepository
     sources/
-      local/             // Hive/SharedPrefs
-      remote/            // LLM API client, mock client
+      local/               // SeedLoader (assets/recipes.json)
+  dev/
+    components_demo_screen.dart
+  features/
+    customize/
+    finalizer/
+    home/
+    ingredients/
+    instructions/
+    onboarding/
+    saved/
+    settings/
+  repository/              // legacy substitution & recipe repos (to be deprecated)
   router/
-    routes.dart          // typed routes, names, deep links (optional)
+    app_router.dart
+  theme/
+    app_theme.dart
+    tokens.dart            // design tokens
 ```
 
-**Why this works:**
-
-* Contracts (models, repos) sit in `/data` and are injected into features.
-* Feature isolation prevents cross-coupling; screens can evolve independently.
-* Repositories abstract local vs remote; swapping LLM or storage doesn’t touch UI.
-
-**Tech choices (pragmatic):**
-
-* **State:** Riverpod (simple, testable, well-documented).
-* **Navigation:** go_router (declarative, URL-friendly).
-* **Local storage:** SharedPreferences (settings) + Hive (saved recipes, cached adaptations).
-* **HTTP:** `dio` with interceptors for logging + timeouts.
-* **Linting:** `flutter_lints` + `very_good_analysis` (optional).
+Why this works
+- Data models live in `lib/data/models/*` and are injected via repositories.
+- UI depends on tokens in `lib/theme/tokens.dart`; no raw hex/magic numbers.
+- Repositories make LLM/local sources swappable; caching is internal to data layer.
 
 ---
 
 ## 2) Design System (tokens-first)
 
-Define tokens once; never hardcode magic numbers/colors in widgets. LLMs will reference tokens.
+- Colors/Type/Spacing from tokens in `lib/theme/tokens.dart` and `lib/theme/app_theme.dart`.
+- Components: AppButton, AppCard, AppChip, ChecklistTile, SegmentedControl, Tabs, Dropdown, Skeleton (see `lib/ui/atoms/*`).
+- Accessibility: min body 16sp; tap targets ≥ 48dp; calm motion (200–250ms ease-out).
 
-* **Colors:** map the agreed palette to semantic roles.
-
-  * background = #FAF6F3
-  * surface = #F7EDE2
-  * primary = #E27D60
-  * secondary = #8D8741
-  * textPrimary = #2F2F2F
-  * textSecondary = #5A5A5A
-  * divider = #E8DCC9
-  * success = #B5C99A
-  * alert = #D97C6A
-* **Typography:** heading, title, body, label; min body 16sp; tap targets ≥48dp.
-* **Spacing:** 4-based scale (4, 8, 12, 16, 20, 24, 32).
-* **Components:** primary/secondary buttons, chips, cards, checklist tile, segmented control, slider, tabs.
-* **Motion:** 200–250ms ease-out for taps; subtle page transitions.
-
-Deliverables:
-
-1. `theme/theme.dart` exposes `ThemeData` using tokens.
-2. Reusable widgets in each feature rely only on tokens.
+Deliverables: ThemeData wired by tokens; shared atoms used across all features; no magic numbers.
 
 ---
 
-## 3) Data Contracts (versioned)
+## 3) Data Contracts (Schema v1)
 
-Design first; freeze v1; validate at runtime. All LLM outputs must conform.
-
-### 3.1 Recipe Schema (v1)
+Canonical Recipe (v1) — aligns with `lib/data/models/*.dart`
 
 ```
 Recipe {
+  schemaVersion: 1,
   id: string,
   title: string,
-  time_total_min: int,
+  timeTotalMin: int,
   diet: "veg" | "nonveg",
-  image_url: string,
+  imageAsset: string,
+  imageUrl?: string,
   ingredients: Ingredient[],
   steps: Step[],
 }
@@ -112,169 +90,90 @@ Ingredient {
   id: string,
   name: string,
   qty: number,
-  unit: string,          // "g", "ml", "tbsp", "tsp", "cup", "piece"
-  category: "core" | "protein" | "vegetable" | "spice" | "other",
+  unit: "g"|"ml"|"tbsp"|"tsp"|"cup"|"piece",
+  category: "core"|"protein"|"vegetable"|"spice"|"other",
+  thumbAsset?: string,
+  thumbUrl?: string,
 }
 
 Step {
   num: int,
   text: string,
-  timer_sec?: int,
-  temperature_c?: int,
+  timerSec?: int,
+  temperatureC?: int,
 }
 ```
 
-### 3.2 Substitution API Contract (v1)
-
-**Request**
-
+Params (UI → Repository)
 ```
-{
-  recipe_id: string,
-  params: { servings: int, time: "fast"|"regular", spice: "mild"|"medium"|"spicy" },
-  available_ids: string[],
-  missing_ids: string[]
+params: {
+  servings: int,
+  timeMode: "fast" | "regular",
+  spice: "mild" | "medium" | "hot"
 }
 ```
 
-**Response**
+---
 
-```
-{
-  substitutions: [
-    { substitute_id: string, substitute_name: string, for_id: string }
-  ],
-  final_ingredients: Ingredient[]  // same schema; merged and scaled
-}
-```
+## 4) Screens & Flows
 
-### 3.3 Optional Step Adaptation Contract (v1)
+Primary screens
+- Onboarding
+- Homepage
+- Recipe Page (Mode Choice)
+- Customization
+- Ingredient Picker
+- Ingredient Finalizer (LLM Call 1)
+- Recipe (View) — Simple shows base; AI shows generated steps/time (LLM Call 2)
+- Saved
+- Settings
 
-**Request**: `{ recipe_id, final_ingredients, params }`
-**Response**: `{ steps: Step[], time_total_min: int }`
-
-**Rules:**
-
-* Must remain OnePan-compatible (no extra equipment).
-* Units normalized; ids stable; categories preserved.
-* Include `schema_version: 1` in every payload for migration safety.
+Flow summary
+- Simple: Homepage → Recipe Page → Recipe (static)
+- AI: Homepage → Recipe Page → Customization → Ingredient Picker → Finalizer (Call 1) → Recipe Generation (Call 2) → Recipe (customized)
 
 ---
 
-## 4) Feature Milestones (compatible sequencing)
+## 5) Milestones
 
-### M1 — Shell & Theme (compat baseline)
-
-* Create app shell, routing, and theme tokens.
-* Build primitive components: Button, Card, Chip, ChecklistTile, SegmentedControl, Tabs.
-* Acceptance: All 6 placeholder screens render with design system; no business logic.
-
-### M2 — Static Content & Navigation
-
-* Load 3–10 recipes from `/assets/recipes.json` (schema v1).
-* Homepage grid → details flow to Customization.
-* Acceptance: Card tap navigates through entire flow using static data.
-
-### M3 — Customization & State
-
-* Hook servings/time/spice controls; keep state via Riverpod providers.
-* Acceptance: Values persist across navigation; deep link back preserves state.
-
-### M4 — Ingredient Picker (groups + search)
-
-* Render grouped ingredients; core pinned on top.
-* Search add from pre-approved list; prevent duplicates.
-* Acceptance: Check/uncheck updates a canonical list in state; unit tests for grouping/sorting.
-
-### M5 — Finalizer (Mock Adapter)
-
-* Implement `SubstitutionRepository` with a **mock** source (local rules file) that returns deterministic substitutions matching contract v1.
-* Acceptance: User sees revised list; confirm proceeds to Recipe.
-
-### M6 — Recipe Screen Polishing
-
-* Tabs (Ingredients | Steps), inline ⏱ badges, **tap-to-reveal quantity** tooltip.
-* Save Recipe locally (Hive). Saved tab lists items.
-* Acceptance: Saved recipe reloads exactly with substitutions and params.
-
-### M7 — Real LLM Adapter (behind the repository)
-
-* Add RemoteSubstitutionSource → validates JSON (schema v1), times out, retries once, falls back to mock.
-* Cache responses by hash(recipe_id+params+availability).
-* Acceptance: Toggle between mock and live via env flag; bad responses don’t crash UI.
-
-### M8 — Hardening & Beta
-
-* Accessibility pass (contrast, sizes, talkback labels).
-* Performance: list virtualization, image caching.
-* Error states: offline, timeout, parse failure banners.
-* Beta build signed; distribute to pilot users.
+| Milestone | Goal | Outcomes |
+|-----------|------|----------|
+| M0 — Setup & Docs | Repo hygiene + specs | Updated README/specs/plan; tokens checked in; CI basics |
+| M1 — Shell & Theme | Scaffolding + tokens | App shell, routing, tabs; shared atoms; placeholder screens |
+| M2 — Static Content | Seed + Simple Mode | Load from `assets/recipes.json` (schema v1); Simple flow to Recipe |
+| M3 — Customization & State | Params + state | Servings/timeMode/spice wired via Riverpod; persist across nav |
+| M4 — Ingredients | Picker UX | Grouped checklist (Core, Protein, Vegetable, Spice, Other); search add |
+| M5 — Finalizer (LLM Call 1) | Substitutions | Implement repository call + schema validation + caching + fallback |
+| M6 — Recipe Generation (Call 2) | Steps/time | Generate steps/time from finalized ingredients; validate & fallback |
+| M7 — Save & Polish | Persistence + UX | Save recipe (Hive), loading/empty/error states, performance & a11y pass |
+| M8 — QA & Beta | Stability | Minimal telemetry, beta build, smoke tests |
 
 ---
 
-## 5) LLM Collaboration Protocol (for coding tasks)
+## 6) Repositories & Integration
 
-**Why:** Ensure consistent, high-quality code from LLMs by giving precise prompts and acceptance criteria.
-
-### 5.1 Task Template (prompt to LLM)
-
-* **Context:** Summarize feature + file paths to touch.
-* **Contracts:** Paste relevant schema/types and design tokens.
-* **Acceptance Criteria:** Bullet list (UI behavior, state persistence, error handling, tests).
-* **Non-Goals:** Explicitly list what NOT to change.
-* **Output Style:** Ask for minimal diff or specific files; include docstrings.
-
-### 5.2 Guardrails
-
-* Never hardcode colors/spacing — use tokens.
-* Keep widget build methods small; extract stateless components.
-* All state via Riverpod; no global singletons.
-* Repository interfaces must not import UI packages.
-* Add unit tests for pure functions (grouping, scaling, substitution merge).
+- RecipeRepository: backed by SeedLoader (sorted, filter by `diet`, `timeMode` via threshold).
+- Substitution/Personalization (AI Mode):
+  - Call 1 (Finalizer): input (`recipeId`, `params`, `availableIds`, `missingIds`) → output (`finalIngredients`, `substitutions[]`).
+  - Call 2 (Recipe Generation): input (`recipeId`, `params`, `finalIngredients[]`) → output (`steps[]`, `timeTotalMin`).
+- Validation: strict schema checks before UI render; on failure → fallback to base.
+- Caching: key = `recipeId + params + availableIds + missingIds` (order-independent for lists).
+- Storage: Hive for saved recipes and cached AI results; SharedPreferences for lightweight prefs.
 
 ---
 
-## 6) Testing Strategy
+## 7) Release & Versioning
 
-* **Unit:** ingredient grouping/sorting; quantity scaling; repository merge logic.
-* **Widget:** Ingredient checklist interactions; tap-to-quantity; navigation.
-* **Golden tests:** Core screens at common breakpoints (small/medium devices).
-* **Manual scenarios:**
-
-  1. Beginner Veg user completes a recipe with two substitutions.
-  2. Confident Non-Veg user scales to 5 servings, Fast mode.
-  3. Offline mode during Finalizer → fallback to mock.
+- App versions: semantic (`0.1.0` MVP beta).
+- Schema: `schemaVersion: 1` in all recipes/responses; adapters handle migrations if bumped.
+- Feature flags: `useLiveLLM`, `enableRecipeGen` (Call 2 on/off).
 
 ---
 
-## 7) Telemetry (minimal)
+## 8) Definition of Done (v1.1)
 
-* Anonymous events: screen views, completion of Finalizer, Save Recipe.
-* Latency: substitution round-trip time, parse failures count.
-* Store locally during MVP if network is out-of-scope.
+- Users can: onboard → pick recipe → choose mode → customize → pick ingredients → finalize → generate → view → save.
+- Both LLM calls validated against schema; cache keys stable and documented.
+- All data/params use grounded names (`timeTotalMin`, `timeMode`, `diet`, units/categories enums).
+- App stable in happy paths; errors show friendly states; no crashes.
 
----
-
-## 8) Release & Versioning
-
-* **App versions:** semantic (`0.1.0` MVP beta).
-* **Schema versions:** `schema_version` in every recipe/response; migration function if incremented.
-* **Feature flags:** `useLiveLLM` on/off; `enableStepAdaptation` on/off.
-
----
-
-## 9) Risks & Mitigations
-
-* **Schema drift:** Lock v1; validate + log; strict fallbacks.
-* **UI inconsistency (LLM code):** Tokens + component library; PR checklist.
-* **Latency:** Cache + graceful loading on Finalizer; optimistic UI.
-* **Scope creep:** Six screens only; no cook mode/voice.
-
----
-
-## 10) Definition of Done (MVP)
-
-* Users can: onboard → pick recipe → customize → check ingredients → finalize → view recipe → save.
-* All data flows adhere to schema v1; LLM adapter is optional and swappable.
-* App stable on 2–3 Android devices; no crashes in happy path.
-* Known issues documented; next iteration scoped.
