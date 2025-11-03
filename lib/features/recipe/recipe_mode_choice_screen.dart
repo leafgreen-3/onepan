@@ -145,20 +145,13 @@ class RecipeModeChoiceScreen extends ConsumerWidget {
                   expand: true,
                 ),
                 const SizedBox(height: AppSpacing.md),
-                Theme(
-                  data: Theme.of(context).copyWith(
-                    colorScheme: Theme.of(context).colorScheme.copyWith(
-                          primary: scheme.error,
-                          onPrimary: scheme.onError,
-                        ),
-                  ),
-                  child: AppButton(
-                    label: 'AI Mode (Beta)',
-                    onPressed: () => context.push('${Routes.customize}/$recipeId'),
-                    variant: AppButtonVariant.filled,
-                    size: AppButtonSize.lg,
-                    expand: true,
-                  ),
+                AppButton(
+                  label: 'AI Mode (Beta)',
+                  onPressed: () => context.push('${Routes.customize}/$recipeId'),
+                  variant: AppButtonVariant.filled,
+                  role: AppButtonRole.aiAccent,
+                  size: AppButtonSize.lg,
+                  expand: true,
                 ),
               ],
             ),

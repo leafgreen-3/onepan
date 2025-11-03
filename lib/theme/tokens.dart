@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
+  static AppColorsAccessor of(BuildContext context) => AppColorsAccessor(Theme.of(context).brightness);
+
   // Core palette
   static const Color primary = Color(0xFF3E7C59); // warm green
   static const Color onPrimary = Colors.white;
@@ -25,6 +27,35 @@ class AppColors {
   // Dark mode surfaces
   static const Color surfaceDark = Color(0xFF151412);
   static const Color onSurfaceDark = Color(0xFFE9E6E1);
+}
+
+// Semantic AI accent colors for light theme.
+class AppColorsLight {
+  AppColorsLight._();
+
+  static const Color aiAccent = Color(0xFFCC5146);
+  static const Color onAiAccent = Color(0xFFFFFFFF);
+}
+
+// Semantic AI accent colors for dark theme.
+class AppColorsDark {
+  AppColorsDark._();
+
+  static const Color aiAccent = Color(0xFFDC655B);
+  static const Color onAiAccent = Color(0xFFFFFFFF);
+}
+
+// Access semantic tokens that depend on theme brightness.
+class AppColorsAccessor {
+  AppColorsAccessor(this.brightness);
+  final Brightness brightness;
+
+  Color get aiAccent => brightness == Brightness.dark
+      ? AppColorsDark.aiAccent
+      : AppColorsLight.aiAccent;
+  Color get onAiAccent => brightness == Brightness.dark
+      ? AppColorsDark.onAiAccent
+      : AppColorsLight.onAiAccent;
 }
 
 class AppTextStyles {
