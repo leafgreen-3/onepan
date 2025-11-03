@@ -74,6 +74,7 @@ class RecipeModeChoiceScreen extends ConsumerWidget {
         }
 
         return Scaffold(
+          key: Key('recipe_detail_${recipe.id}'),
           appBar: AppBar(
             backgroundColor: scheme.surface,
             elevation: AppElevation.e0,
