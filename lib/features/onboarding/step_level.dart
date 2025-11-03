@@ -65,7 +65,8 @@ class OnboardingLevelScreen extends ConsumerWidget {
                         if (state.level == null) {
                           return;
                         }
-                        context.go(Routes.onboardingDiet);
+                        // Use push to retain back stack so BackButton works on Step 3.
+                        context.push(Routes.onboardingDiet);
                       }
                     : null,
               ),
