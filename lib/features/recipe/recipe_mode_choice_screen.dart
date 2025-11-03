@@ -9,32 +9,13 @@ import 'package:onepan/theme/tokens.dart';
 import 'package:onepan/ui/atoms/app_button.dart';
 import 'package:onepan/ui/atoms/empty_state.dart';
 
-class RecipeModeChoiceScreen extends ConsumerStatefulWidget {
+class RecipeModeChoiceScreen extends ConsumerWidget {
   const RecipeModeChoiceScreen({super.key, required this.recipeId});
 
   final String recipeId;
 
   @override
-  ConsumerState<RecipeModeChoiceScreen> createState() => _RecipeModeChoiceScreenState();
-}
-
-class _RecipeModeChoiceScreenState extends ConsumerState<RecipeModeChoiceScreen> {
-  bool _busy = false;
-
-  Future<void> _navigate(Future<void> Function() action) async {
-    if (_busy) return;
-    setState(() => _busy = true);
-    try {
-      await action();
-    } finally {
-      if (mounted) setState(() => _busy = false);
-    }
-  }
-
-  String get recipeId => widget.recipeId;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final recipeAsync = ref.watch(recipeByIdProvider(recipeId));
     final scheme = Theme.of(context).colorScheme;
 
@@ -161,41 +142,21 @@ class _RecipeModeChoiceScreenState extends ConsumerState<RecipeModeChoiceScreen>
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-                  child: AppButton(
-                    label: 'Simple View',
-                    onPressed: _busy
-                        ? null
-                        : () => _navigate(() async {
-                              context.pushReplacement(
-                                  '${Routes.recipe}/$recipeId/view?mode=simple');
-                            }),
-                    variant: AppButtonVariant.filled,
-                    role: AppButtonRole.primary,
-                    size: AppButtonSize.lg,
-                    minHeight: AppSizes.buttonLg,
-                    radius: AppRadii.xl,
-                    expand: true,
-                  ),
+                AppButton(
+                  label: 'Simple View',
+                  onPressed: () => context.pushReplacement('${Routes.recipe}/$recipeId/view?mode=simple'),
+                  variant: AppButtonVariant.filled,
+                  size: AppButtonSize.lg,
+                  expand: true,
                 ),
                 const SizedBox(height: AppSpacing.md),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-                  child: AppButton(
-                    label: 'AI Mode (Beta)',
-                    onPressed: _busy
-                        ? null
-                        : () => _navigate(() async {
-                              await context.push('${Routes.customize}/$recipeId');
-                            }),
-                    variant: AppButtonVariant.filled,
-                    role: AppButtonRole.aiAccent,
-                    size: AppButtonSize.lg,
-                    minHeight: AppSizes.buttonLg,
-                    radius: AppRadii.xl,
-                    expand: true,
-                  ),
+                AppButton(
+                  label: 'AI Mode (Beta)',
+                  onPressed: () => context.push('${Routes.customize}/$recipeId'),
+                  variant: AppButtonVariant.filled,
+                  role: AppButtonRole.aiAccent,
+                  size: AppButtonSize.lg,
+                  expand: true,
                 ),
               ],
             ),

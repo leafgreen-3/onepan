@@ -16,8 +16,6 @@ class AppButton extends StatelessWidget {
     this.icon,
     this.loading = false,
     this.expand = false,
-    this.minHeight,
-    this.radius,
   });
 
   final String label;
@@ -28,8 +26,6 @@ class AppButton extends StatelessWidget {
   final Widget? icon;
   final bool loading;
   final bool expand;
-  final double? minHeight;
-  final double? radius;
 
   @override
   Widget build(BuildContext context) {
@@ -61,8 +57,8 @@ class AppButton extends StatelessWidget {
           horizontal: AppSpacing.xl, vertical: AppSpacing.md),
     };
 
-    final double minH = minHeight ?? AppSizes.minTouchTarget;
-    final BorderRadius r = BorderRadius.circular(radius ?? AppRadii.lg);
+    const double minHeight = AppSizes.minTouchTarget;
+    final BorderRadius radius = BorderRadius.circular(AppRadii.lg);
 
     final Widget content = AnimatedSwitcher(
       duration: AppDurations.fast,
@@ -92,10 +88,10 @@ class AppButton extends StatelessWidget {
     );
 
     final ButtonStyle baseStyle = ButtonStyle(
-      minimumSize: WidgetStatePropertyAll(Size(minH, minH)),
+      minimumSize: const WidgetStatePropertyAll(Size(minHeight, minHeight)),
       padding: WidgetStatePropertyAll(padding),
       shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(borderRadius: r),
+        RoundedRectangleBorder(borderRadius: radius),
       ),
       animationDuration: AppDurations.normal,
     );
