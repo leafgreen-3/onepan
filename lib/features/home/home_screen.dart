@@ -54,7 +54,7 @@ class HomeScreen extends ConsumerWidget {
                           key: Key('recipe_card_${recipe.id}'),
                           recipe: recipe,
                           isFavorite: isFavorite,
-                          onTap: () => context.push('${Routes.customize}/${recipe.id}'),
+                          onTap: () => context.push('${Routes.recipe}/${recipe.id}'),
                           onToggleFavorite: () =>
                               controller.toggleFavorite(recipe.id),
                         );

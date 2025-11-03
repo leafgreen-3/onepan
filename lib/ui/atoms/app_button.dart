@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:onepan/theme/tokens.dart';
 
 enum AppButtonVariant { filled, tonal, text }
+enum AppButtonRole { primary, danger, aiAccent }
 enum AppButtonSize { md, lg }
 
 class AppButton extends StatelessWidget {
@@ -10,6 +11,7 @@ class AppButton extends StatelessWidget {
     required this.label,
     this.onPressed,
     this.variant = AppButtonVariant.filled,
+    this.role = AppButtonRole.primary,
     this.size = AppButtonSize.md,
     this.icon,
     this.loading = false,
@@ -19,6 +21,7 @@ class AppButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final AppButtonVariant variant;
+  final AppButtonRole role;
   final AppButtonSize size;
   final Widget? icon;
   final bool loading;
@@ -27,7 +30,22 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final textStyle = Theme.of(context).textTheme.labelLarge;
+    Color labelColor;
+    switch (variant) {
+      case AppButtonVariant.filled:
+        labelColor = switch (role) {
+          AppButtonRole.aiAccent => AppColors.of(context).onAiAccent,
+          _ => scheme.onPrimary,
+        };
+        break;
+      case AppButtonVariant.tonal:
+        labelColor = scheme.onPrimaryContainer;
+        break;
+      case AppButtonVariant.text:
+        labelColor = scheme.primary;
+        break;
+    }
+    final TextStyle textStyle = AppTextStyles.label.copyWith(color: labelColor);
 
     final bool enabled = onPressed != null && !loading;
     final VoidCallback? effectiveOnPressed = enabled ? onPressed : null;
@@ -51,7 +69,8 @@ class AppButton extends StatelessWidget {
               width: AppSizes.icon,
               child: CircularProgressIndicator(
                 strokeWidth: AppThickness.stroke,
-                valueColor: AlwaysStoppedAnimation<Color>(_spinnerColor(scheme)),
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(_spinnerColor(context, scheme)),
               ),
             )
           : Row(
@@ -83,12 +102,29 @@ class AppButton extends StatelessWidget {
           style: baseStyle.merge(
             ButtonStyle(
               backgroundColor: WidgetStateProperty.resolveWith((states) {
+                Color base = switch (role) {
+                  AppButtonRole.aiAccent => AppColors.of(context).aiAccent,
+                  _ => scheme.primary,
+                };
                 if (states.contains(WidgetState.disabled)) {
-                  return scheme.primary.withValues(alpha: AppOpacity.disabled);
+                  return base.withValues(alpha: AppOpacity.disabled);
                 }
-                return scheme.primary;
+                return base;
               }),
-              foregroundColor: WidgetStatePropertyAll(scheme.onPrimary),
+              foregroundColor: WidgetStatePropertyAll(labelColor),
+              overlayColor: WidgetStateProperty.resolveWith((states) {
+                final Color fg = role == AppButtonRole.aiAccent
+                    ? AppColors.of(context).onAiAccent
+                    : scheme.onPrimary;
+                if (states.contains(WidgetState.pressed) ||
+                    states.contains(WidgetState.focused)) {
+                  return fg.withValues(alpha: AppOpacity.focus);
+                }
+                if (states.contains(WidgetState.hovered)) {
+                  return fg.withValues(alpha: AppOpacity.hover);
+                }
+                return null;
+              }),
               elevation: const WidgetStatePropertyAll(AppElevation.e2),
             ),
           ),
@@ -131,10 +167,12 @@ class AppButton extends StatelessWidget {
     return semanticsWrapped;
   }
 
-  Color _spinnerColor(ColorScheme scheme) {
+  Color _spinnerColor(BuildContext context, ColorScheme scheme) {
     switch (variant) {
       case AppButtonVariant.filled:
-        return scheme.onPrimary;
+        return role == AppButtonRole.aiAccent
+            ? AppColors.of(context).onAiAccent
+            : scheme.onPrimary;
       case AppButtonVariant.tonal:
         return scheme.onPrimaryContainer;
       case AppButtonVariant.text:

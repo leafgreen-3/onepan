@@ -98,7 +98,8 @@ class _OnboardingCountryScreenState extends ConsumerState<OnboardingCountryScree
       label: 'Next',
       onPressed: canProceed
           ? () async {
-              context.go(Routes.onboardingLevel);
+              // Use push to retain back stack so BackButton works on Step 2.
+              context.push(Routes.onboardingLevel);
             }
           : null,
     );

@@ -14,6 +14,8 @@ class Routes {
   static const ingredients = '/ingredients';
   static const finalizer = '/finalizer';
   static const recipe = '/recipe';
+  // Route name for nested recipe view (not a path)
+  static const recipeView = '/recipe_view';
 
   // Dev routes
   static const devRecipes = '/dev/recipes';

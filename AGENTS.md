@@ -53,7 +53,7 @@ Follow scope per Project_Plan.md and UI rules in UI_Principles.md.
 - Encode palette/spacing/type/interaction rules from UI_Principles.md.
 - Produce component contracts and screen states (loading/empty/error/ready).
 - Enforce one primary CTA.
-- Output: ui/components.md, token definitions under lib/app/theme/*.
+- Output: ui/components.md, token definitions under lib/theme/*.
 
 3) ARCH-Agent (Architecture)
 - Own folder structure, DI, and routing.

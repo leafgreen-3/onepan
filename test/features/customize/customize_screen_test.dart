@@ -14,7 +14,7 @@ Widget _buildRouterApp({required String initialLocation}) {
         builder: (context, state) => const CustomizeScreen(),
       ),
       GoRoute(
-        path: '/ingredients',
+        path: '/ingredients/:id',
         builder: (context, state) {
           return const Scaffold(
             body: Center(child: Text('Ingredients')),
@@ -87,10 +87,10 @@ void main() {
           builder: (context, state) => const CustomizeScreen(),
         ),
         GoRoute(
-          path: '/ingredients',
+          path: '/ingredients/:id',
           builder: (context, state) {
             final payload = state.extra as Map<String, dynamic>? ?? const {};
-            final id = payload['recipeId'] as String? ?? '';
+            final id = state.pathParameters['id'] ?? '';
             final customize = payload['customize'] as CustomizeState?;
             return Scaffold(
               body: Column(
