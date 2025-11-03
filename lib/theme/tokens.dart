@@ -112,6 +112,7 @@ class AppRadii {
   static const double sm = 6.0;
   static const double md = 10.0;
   static const double lg = 16.0;
+  static const double xl = 24.0;
 }
 
 class AppElevation {
@@ -161,6 +162,7 @@ class AppSizes {
   // Minimum interactive target per accessibility guidance.
   static const double minTouchTarget = 48.0;
   static const double icon = 24.0;
+  static const double buttonLg = 56.0;
 }
 
 class AppThickness {

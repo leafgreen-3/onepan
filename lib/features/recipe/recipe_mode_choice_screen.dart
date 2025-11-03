@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,13 +9,32 @@ import 'package:onepan/theme/tokens.dart';
 import 'package:onepan/ui/atoms/app_button.dart';
 import 'package:onepan/ui/atoms/empty_state.dart';
 
-class RecipeModeChoiceScreen extends ConsumerWidget {
+class RecipeModeChoiceScreen extends ConsumerStatefulWidget {
   const RecipeModeChoiceScreen({super.key, required this.recipeId});
 
   final String recipeId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RecipeModeChoiceScreen> createState() => _RecipeModeChoiceScreenState();
+}
+
+class _RecipeModeChoiceScreenState extends ConsumerState<RecipeModeChoiceScreen> {
+  bool _busy = false;
+
+  Future<void> _navigate(Future<void> Function() action) async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      await action();
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  String get recipeId => widget.recipeId;
+
+  @override
+  Widget build(BuildContext context) {
     final recipeAsync = ref.watch(recipeByIdProvider(recipeId));
     final scheme = Theme.of(context).colorScheme;
 
@@ -81,12 +101,14 @@ class RecipeModeChoiceScreen extends ConsumerWidget {
             centerTitle: true,
           ),
           body: SafeArea(
+            top: true,
+            bottom: false,
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(
+              padding: EdgeInsets.fromLTRB(
                 AppSpacing.xl,
                 AppSpacing.lg,
                 AppSpacing.xl,
-                AppSpacing.xl,
+                math.max(AppSpacing.xl, MediaQuery.viewPaddingOf(context).bottom),
               ),
               children: [
                 // Hero image
@@ -120,7 +142,7 @@ class RecipeModeChoiceScreen extends ConsumerWidget {
                   recipe.title,
                   style: AppTextStyles.display.copyWith(color: scheme.onSurface),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.sm),
                 // Time row
                 Text(
                   '${recipe.timeTotalMin} min',
@@ -128,30 +150,52 @@ class RecipeModeChoiceScreen extends ConsumerWidget {
                     color: scheme.onSurface.withValues(alpha: AppOpacity.mediumText),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.md),
                 // Short description (placeholder for now)
                 Text(
                   'A simple, one-pan recipe. Customize with AI or view the base version.',
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.body.copyWith(
-                    color: scheme.onSurface.withValues(alpha: AppOpacity.mediumText),
+                    color: scheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                AppButton(
-                  label: 'Simple View',
-                  onPressed: () => context.pushReplacement('${Routes.recipe}/$recipeId/view?mode=simple'),
-                  variant: AppButtonVariant.filled,
-                  size: AppButtonSize.lg,
-                  expand: true,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+                  child: AppButton(
+                    label: 'Simple View',
+                    onPressed: _busy
+                        ? null
+                        : () => _navigate(() async {
+                              context.pushReplacement(
+                                  '${Routes.recipe}/$recipeId/view?mode=simple');
+                            }),
+                    variant: AppButtonVariant.filled,
+                    role: AppButtonRole.primary,
+                    size: AppButtonSize.lg,
+                    minHeight: AppSizes.buttonLg,
+                    radius: AppRadii.xl,
+                    expand: true,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                AppButton(
-                  label: 'AI Mode (Beta)',
-                  onPressed: () => context.push('${Routes.customize}/$recipeId'),
-                  variant: AppButtonVariant.filled,
-                  role: AppButtonRole.aiAccent,
-                  size: AppButtonSize.lg,
-                  expand: true,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+                  child: AppButton(
+                    label: 'AI Mode (Beta)',
+                    onPressed: _busy
+                        ? null
+                        : () => _navigate(() async {
+                              await context.push('${Routes.customize}/$recipeId');
+                            }),
+                    variant: AppButtonVariant.filled,
+                    role: AppButtonRole.aiAccent,
+                    size: AppButtonSize.lg,
+                    minHeight: AppSizes.buttonLg,
+                    radius: AppRadii.xl,
+                    expand: true,
+                  ),
                 ),
               ],
             ),
