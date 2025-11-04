@@ -44,9 +44,9 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.text('One'), findsOneWidget);
-    expect(find.text('Three'), findsOneWidget);
-    expect(find.text('Two'), findsNothing);
+    expect(find.text('ing-1'), findsOneWidget);
+    expect(find.text('ing-3'), findsOneWidget);
+    expect(find.text('ing-2'), findsNothing);
   });
 
   testWidgets('Simple mode shows all ingredients', (tester) async {
@@ -66,9 +66,9 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.text('One'), findsOneWidget);
-    expect(find.text('Two'), findsOneWidget);
-    expect(find.text('Three'), findsOneWidget);
+    expect(find.text('ing-1'), findsOneWidget);
+    expect(find.text('ing-2'), findsOneWidget);
+    expect(find.text('ing-3'), findsOneWidget);
   });
 
   testWidgets('AI mode with empty picks shows banner and full list', (tester) async {
@@ -87,9 +87,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('AI mode active'), findsOneWidget);
-    expect(find.text('One'), findsOneWidget);
-    expect(find.text('Two'), findsOneWidget);
-    expect(find.text('Three'), findsOneWidget);
+    expect(find.text('ing-1'), findsOneWidget);
+    expect(find.text('ing-2'), findsOneWidget);
+    expect(find.text('ing-3'), findsOneWidget);
   });
 }
-

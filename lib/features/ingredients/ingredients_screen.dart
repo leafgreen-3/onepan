@@ -11,6 +11,10 @@ import 'package:onepan/theme/tokens.dart';
 import 'package:onepan/router/routes.dart';
 import 'package:onepan/ui/atoms/app_button.dart';
 import 'package:onepan/ui/atoms/checklist_tile.dart';
+import 'package:onepan/services/ingredient_catalog/ingredient_catalog_provider.dart';
+
+// Track missing-catalog warnings to avoid spamming logs.
+final Set<String> _catalogWarnedIds = <String>{};
 
 class IngredientsScreen extends ConsumerWidget {
   const IngredientsScreen({super.key});
@@ -306,6 +310,8 @@ class _GroupSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
+    final catalog = ref.read(ingredientCatalogProvider);
+    final locale = Localizations.localeOf(context);
     final groupName = headerKey.startsWith('header_')
         ? headerKey.substring('header_'.length)
         : headerKey;
@@ -358,18 +364,36 @@ class _GroupSection extends ConsumerWidget {
             curve: Curves.easeOut,
             child: collapsed
                 ? const SizedBox.shrink()
-                : Column(
-                    children: [
-                      for (final dynamic it in items)
-                        _IngredientRow(
-                          id: it.id as String,
-                          title: it.name as String,
-                          thumbAsset: (it.thumbAsset as String?) ??
-                              'assets/images/ingredients/placeholder.png',
-                          checked: selectedIds.contains(it.id as String),
-                          onChanged: () => onToggle(it.id as String),
-                        ),
-                    ],
+                : FutureBuilder<void>(
+                    future: catalog.ensureInitialized(),
+                    builder: (context, snapshot) {
+                      return Column(
+                        children: [
+                          for (final dynamic it in items) ...[
+                            () {
+                              final String id = it.id as String;
+                              final bool inCatalog = catalog.has(id);
+
+                              if (!inCatalog && !_catalogWarnedIds.contains(id)) {
+                                debugPrint('⚠ IngredientCatalog missing: $id');
+                                _catalogWarnedIds.add(id);
+                              }
+
+                              final String title = catalog.displayName(id, locale: locale);
+                              final ImageProvider<Object>? image = catalog.imageProvider(id);
+
+                              return _IngredientRow(
+                                id: id,
+                                title: title,
+                                image: image,
+                                checked: selectedIds.contains(id),
+                                onChanged: () => onToggle(id),
+                              );
+                            }(),
+                          ],
+                        ],
+                      );
+                    },
                   ),
           ),
         ),
@@ -382,14 +406,14 @@ class _IngredientRow extends StatelessWidget {
   const _IngredientRow({
     required this.id,
     required this.title,
-    required this.thumbAsset,
+    required this.image,
     required this.checked,
     required this.onChanged,
   });
 
   final String id;
   final String title;
-  final String thumbAsset;
+  final ImageProvider? image;
   final bool checked;
   final VoidCallback onChanged;
 
@@ -401,16 +425,52 @@ class _IngredientRow extends StatelessWidget {
       title: title,
       checked: checked,
       onChanged: (_) => onChanged(),
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(AppRadii.md),
-        child: Image.asset(
-          thumbAsset,
-          width: AppSizes.minTouchTarget,
-          height: AppSizes.minTouchTarget,
-          fit: BoxFit.cover,
-        ),
-      ),
+      leading: _PickerThumbOrPlaceholder(id: id, image: image),
     );
+  }
+}
+
+class _PickerThumbOrPlaceholder extends StatelessWidget {
+  const _PickerThumbOrPlaceholder({required this.id, this.image});
+  final String id;
+  final ImageProvider? image;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    const double size = AppSizes.minTouchTarget;
+    final border = BorderRadius.circular(AppRadii.md);
+
+    Widget placeholder() => Container(
+          key: Key('picker_ing_thumb_placeholder_$id'),
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            color: scheme.surfaceContainerLow,
+            borderRadius: border,
+          ),
+          alignment: Alignment.center,
+          child: Icon(
+            Icons.image_outlined,
+            size: AppSizes.icon,
+            color: scheme.onSurface.withValues(alpha: AppOpacity.mediumText),
+          ),
+        );
+
+    if (image != null) {
+      return ClipRRect(
+        borderRadius: border,
+        child: Image(
+          image: image!,
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => placeholder(),
+        ),
+      );
+    }
+
+    return placeholder();
   }
 }
 

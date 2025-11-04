@@ -1,0 +1,283 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "bell-pepper",
+      "names": {
+        "en": "Bell pepper"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "black-beans",
+      "names": {
+        "en": "Cooked black beans"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "broccoli",
+      "names": {
+        "en": "Broccoli florets"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "broth",
+      "names": {
+        "en": "Vegetable broth"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "butter",
+      "names": {
+        "en": "Unsalted butter"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "carrot",
+      "names": {
+        "en": "Sliced carrot"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "chicken-thigh",
+      "names": {
+        "en": "Boneless chicken thighs"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "chickpea",
+      "names": {
+        "en": "Chickpeas"
+      },
+      "image": "assets/ingredients/chickpea.png",
+      "aliases": [
+        "garbanzo",
+        "garbanzo beans"
+      ]
+    },
+    {
+      "id": "chipotle",
+      "names": {
+        "en": "Chipotle chili paste"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "cilantro",
+      "names": {
+        "en": "Fresh cilantro"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "corn",
+      "names": {
+        "en": "Sweet corn kernels"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "garlic",
+      "names": {
+        "en": "Garlic cloves"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "ginger",
+      "names": {
+        "en": "Fresh ginger"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "lemon",
+      "names": {
+        "en": "Lemon"
+      },
+      "image": "assets/ingredients/lemon.png",
+      "aliases": []
+    },
+    {
+      "id": "lime",
+      "names": {
+        "en": "Lime juice"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "miso",
+      "names": {
+        "en": "White miso"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "oil-olive",
+      "names": {
+        "en": "Olive oil"
+      },
+      "image": "assets/ingredients/oil-olive.png",
+      "aliases": [
+        "olive",
+        "olive oil"
+      ]
+    },
+    {
+      "id": "oil-sesame",
+      "names": {
+        "en": "Sesame oil"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "onion-yellow",
+      "names": {
+        "en": "Yellow onion"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "orzo",
+      "names": {
+        "en": "Dry orzo"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "paprika",
+      "names": {
+        "en": "Smoked paprika"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "parsley",
+      "names": {
+        "en": "Chopped parsley"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "peas",
+      "names": {
+        "en": "Frozen peas"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "potato",
+      "names": {
+        "en": "Baby potatoes"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "rosemary",
+      "names": {
+        "en": "Fresh rosemary"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "salt",
+      "names": {
+        "en": "Salt"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "shrimp",
+      "names": {
+        "en": "Raw shrimp"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "soy-sauce",
+      "names": {
+        "en": "Low-sodium soy sauce"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "spinach",
+      "names": {
+        "en": "Spinach"
+      },
+      "image": "assets/ingredients/spinach.png",
+      "aliases": []
+    },
+    {
+      "id": "stock",
+      "names": {
+        "en": "Chicken stock"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "thyme",
+      "names": {
+        "en": "Fresh thyme"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "tofu-firm",
+      "names": {
+        "en": "Firm tofu"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "tomato",
+      "names": {
+        "en": "Diced tomatoes"
+      },
+      "image": "",
+      "aliases": []
+    },
+    {
+      "id": "water",
+      "names": {
+        "en": "Water"
+      },
+      "image": "",
+      "aliases": []
+    }
+  ]
+}
