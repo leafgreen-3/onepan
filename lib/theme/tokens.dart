@@ -45,6 +45,23 @@ class AppColorsDark {
   static const Color onAiAccent = Color(0xFFFFFFFF);
 }
 
+/// Semantic tints for spice levels (subtle backgrounds)
+class AppTintsLight {
+  AppTintsLight._();
+
+  static const Color spiceMild = Color(0xFF2E7D32); // soft green-ish
+  static const Color spiceMedium = Color(0xFFED6C02); // soft orange
+  static const Color spiceSpicy = Color(0xFFE53935); // coral/red
+}
+
+class AppTintsDark {
+  AppTintsDark._();
+
+  static const Color spiceMild = Color(0xFF66BB6A);
+  static const Color spiceMedium = Color(0xFFFFA726);
+  static const Color spiceSpicy = Color(0xFFEF5350);
+}
+
 // Access semantic tokens that depend on theme brightness.
 class AppColorsAccessor {
   AppColorsAccessor(this.brightness);
@@ -56,6 +73,26 @@ class AppColorsAccessor {
   Color get onAiAccent => brightness == Brightness.dark
       ? AppColorsDark.onAiAccent
       : AppColorsLight.onAiAccent;
+}
+
+class AppTints {
+  AppTints._();
+
+  static AppTintsAccessor of(BuildContext context) =>
+      AppTintsAccessor(Theme.of(context).brightness);
+}
+
+class AppTintsAccessor {
+  AppTintsAccessor(this.brightness);
+  final Brightness brightness;
+
+  Color get spiceMild =>
+      brightness == Brightness.dark ? AppTintsDark.spiceMild : AppTintsLight.spiceMild;
+  Color get spiceMedium => brightness == Brightness.dark
+      ? AppTintsDark.spiceMedium
+      : AppTintsLight.spiceMedium;
+  Color get spiceSpicy =>
+      brightness == Brightness.dark ? AppTintsDark.spiceSpicy : AppTintsLight.spiceSpicy;
 }
 
 class AppTextStyles {

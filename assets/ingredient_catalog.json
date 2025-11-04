@@ -212,7 +212,7 @@
     {
       "id": "peas",
       "names": {
-        "en": "Frozen Peas"
+        "en": "Peas"
       },
       "image": "assets/ingredients/peas.png",
       "aliases": []
@@ -254,7 +254,7 @@
     {
       "id": "soy-sauce",
       "names": {
-        "en": "Low-sodium Soy Sauce"
+        "en": "Soy Sauce"
       },
       "image": "assets/ingredients/soy-sauce.png",
       "aliases": []
