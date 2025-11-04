@@ -6,21 +6,37 @@ import 'package:onepan/di/locator.dart';
 import 'package:onepan/features/onboarding/onboarding_widgets.dart';
 import 'package:onepan/router/routes.dart';
 import 'package:onepan/theme/tokens.dart';
+import 'package:onepan/features/onboarding/skill/skill_selector.dart';
+import 'package:onepan/features/onboarding/skill/skill_provider.dart';
+import 'package:onepan/features/onboarding/skill/skill_level.dart';
 
-class OnboardingLevelScreen extends ConsumerWidget {
+class OnboardingLevelScreen extends ConsumerStatefulWidget {
   const OnboardingLevelScreen({super.key});
 
-  static const _levels = <String>[
-    'Beginner',
-    'Intermediate',
-    'Advanced',
-  ];
+  @override
+  ConsumerState<OnboardingLevelScreen> createState() => _OnboardingLevelScreenState();
+}
+
+class _OnboardingLevelScreenState extends ConsumerState<OnboardingLevelScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Seed the skill selection from onboarding state if present.
+    final current = ref.read(skillLevelProvider);
+    if (current == null) {
+      final st = ref.read(onboardingControllerProvider);
+      final seed = st.skillLevel ?? _fromTitle(st.level);
+      if (seed != null) {
+        ref.read(skillLevelProvider.notifier).state = seed;
+      }
+    }
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(onboardingControllerProvider);
+  Widget build(BuildContext context) {
     final controller = ref.read(onboardingControllerProvider.notifier);
-    final canProceed = state.level != null;
+    final selected = ref.watch(skillLevelProvider);
+    final canProceed = selected != null;
 
     return Scaffold(
       backgroundColor: AppColors.surface,
@@ -46,15 +62,9 @@ class OnboardingLevelScreen extends ConsumerWidget {
                 subtitle: 'We tune instructions and shortcuts to your comfort level.',
               ),
               const SizedBox(height: AppSpacing.xl),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: OptionGrid(
-                    options: _levels,
-                    selectedOption: state.level,
-                    onSelected: controller.selectLevel,
-                    style: OptionGridStyle.segmented,
-                  ),
+              const Expanded(
+                child: SingleChildScrollView(
+                  child: SkillSelector(),
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
@@ -62,9 +72,11 @@ class OnboardingLevelScreen extends ConsumerWidget {
                 label: 'Next',
                 onPressed: canProceed
                     ? () async {
-                        if (state.level == null) {
-                          return;
-                        }
+                        final sel = ref.read(skillLevelProvider);
+                        if (sel == null) return;
+                        // Persist into onboarding controller for later steps.
+                        controller.selectSkillLevel(sel);
+                        controller.selectLevel(sel.title); // keep legacy string in sync
                         // Use push to retain back stack so BackButton works on Step 3.
                         context.push(Routes.onboardingDiet);
                       }
@@ -75,5 +87,18 @@ class OnboardingLevelScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+SkillLevel? _fromTitle(String? title) {
+  switch (title) {
+    case 'Beginner':
+      return SkillLevel.beginner;
+    case 'Intermediate':
+      return SkillLevel.intermediate;
+    case 'Advanced':
+      return SkillLevel.advanced;
+    default:
+      return null;
   }
 }

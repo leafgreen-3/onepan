@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:onepan/di/locator.dart';
+import 'package:onepan/router/routes.dart';
 import 'package:onepan/theme/tokens.dart';
 import 'package:onepan/ui/atoms/app_button.dart';
 
@@ -41,14 +43,15 @@ class SettingsScreen extends ConsumerWidget {
                   label: 'Reset onboarding',
                   variant: AppButtonVariant.tonal,
                   onPressed: () async {
-                    final messenger = ScaffoldMessenger.of(context);
+                    // Clear persisted + in-memory state, then route to onboarding.
                     await preferences.clearOnboarding();
-                    messenger.showSnackBar(
-                      const SnackBar(
-                        content: Text('Onboarding has been reset.'),
-                        duration: AppDurations.normal,
-                      ),
-                    );
+                    ref.read(onboardingControllerProvider.notifier).clear();
+                    if (!context.mounted) return;
+                    // Route directly to onboarding first step.
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    }
+                    context.go(Routes.onboardingCountry);
                   },
                 ),
               ],

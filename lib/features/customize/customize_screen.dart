@@ -47,23 +47,7 @@ class CustomizeScreen extends ConsumerWidget {
               // Time selection: stacked cards using per-recipe provider
               _SectionCard(
                 title: 'Time',
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Builder(builder: (context) {
-                      final scheme = Theme.of(context).colorScheme;
-                      return Text(
-                        'How would you like to prepare this recipe?',
-                        style: AppTextStyles.body.copyWith(
-                          color: scheme.onSurface
-                              .withValues(alpha: AppOpacity.mediumText),
-                        ),
-                      );
-                    }),
-                    const SizedBox(height: AppSpacing.md),
-                    TimeSelector(recipeId: id),
-                  ],
-                ),
+                child: TimeSelector(recipeId: id),
               ),
 
               const SizedBox(height: AppSpacing.xl),
@@ -71,23 +55,7 @@ class CustomizeScreen extends ConsumerWidget {
               // Spice level slider card (in-memory via provider)
               _SectionCard(
                 title: 'Spice level',
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Builder(builder: (context) {
-                      final scheme = Theme.of(context).colorScheme;
-                      return Text(
-                        "Choose how spicy you'd like this recipe to be.",
-                        style: AppTextStyles.body.copyWith(
-                          color: scheme.onSurface
-                              .withValues(alpha: AppOpacity.mediumText),
-                        ),
-                      );
-                    }),
-                    const SizedBox(height: AppSpacing.md),
-                    SpiceSelector(recipeId: id),
-                  ],
-                ),
+                child: SpiceSelector(recipeId: id),
               ),
 
               const SizedBox(height: AppSpacing.xl),
