@@ -41,41 +41,63 @@ class SpiceSelector extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Semantics(
-            label: 'Spice level',
-            value: spice.label,
-            child: SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                trackHeight: AppThickness.indicator,
-                activeTrackColor: scheme.primary,
-                inactiveTrackColor:
-                    scheme.onSurface.withValues(alpha: AppOpacity.disabled),
-                activeTickMarkColor: scheme.primary,
-                inactiveTickMarkColor: scheme.onSurface
-                    .withValues(alpha: AppOpacity.mediumText),
-                thumbColor: scheme.primary,
-                overlayColor:
-                    scheme.primary.withValues(alpha: AppOpacity.focus),
-                thumbShape: const RoundSliderThumbShape(
-                  enabledThumbRadius: AppSizes.icon / 2,
-                ),
-              ),
-              child: Slider(
-                min: 0,
-                max: 2,
-                divisions: 2,
-                value: value,
-                onChanged: (v) {
-                  final next = SpiceLevelX.fromIndex3(v.round());
-                  if (next != spice) {
+          LayoutBuilder(
+            builder: (context, constraints) {
+              void updateFromDx(double dx) {
+                const double pad = AppSpacing.lg;
+                final double innerW = (constraints.maxWidth - 2 * pad).clamp(1, double.infinity);
+                final double frac = ((dx - pad) / innerW).clamp(0.0, 1.0);
+                final int idx = (frac * 2).round();
+                final next = SpiceLevelX.fromIndex3(idx);
+                if (next != spice) {
                   ref.read(spiceLevelProvider(recipeId).notifier).state = next;
                 }
-              },
-                onChangeEnd: (_) => HapticFeedback.selectionClick(),
-                semanticFormatterCallback: (v) =>
-                    SpiceLevelX.fromIndex3(v.round()).label,
-              ),
-            ),
+              }
+
+              return Semantics(
+                label: 'Spice level',
+                value: spice.label,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTapDown: (d) => updateFromDx(d.localPosition.dx),
+                  onTapUp: (_) => HapticFeedback.selectionClick(),
+                  onHorizontalDragUpdate: (d) => updateFromDx(d.localPosition.dx),
+                  child: SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      trackHeight: AppThickness.indicator,
+                      activeTrackColor: scheme.primary,
+                      inactiveTrackColor:
+                          scheme.onSurface.withValues(alpha: AppOpacity.disabled),
+                      activeTickMarkColor: scheme.primary,
+                      inactiveTickMarkColor:
+                          scheme.onSurface.withValues(alpha: AppOpacity.mediumText),
+                      thumbColor: scheme.primary,
+                      overlayColor:
+                          scheme.primary.withValues(alpha: AppOpacity.focus),
+                      thumbShape: const RoundSliderThumbShape(
+                        enabledThumbRadius: AppSizes.icon / 2,
+                      ),
+                    ),
+                    child: Slider(
+                      min: 0,
+                      max: 2,
+                      divisions: 2,
+                      value: value,
+                      onChanged: (v) {
+                        final next = SpiceLevelX.fromIndex3(v.round());
+                        if (next != spice) {
+                          ref.read(spiceLevelProvider(recipeId).notifier).state = next;
+                        }
+                      },
+                      // Keep end-haptic when dragging the thumb directly
+                      onChangeEnd: (_) => HapticFeedback.selectionClick(),
+                      semanticFormatterCallback: (v) =>
+                          SpiceLevelX.fromIndex3(v.round()).label,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
           const SizedBox(height: AppSpacing.sm),
           _Labels(active: spice),
