@@ -6,7 +6,8 @@ import 'package:onepan/di/locator.dart';
 import 'package:onepan/features/onboarding/onboarding_widgets.dart';
 import 'package:onepan/router/routes.dart';
 import 'package:onepan/theme/tokens.dart';
-// Country picker is navigated via go_router route; no direct import needed here.
+import 'package:onepan/features/onboarding/country_picker/country_picker_screen.dart';
+import 'package:onepan/features/onboarding/country_data.dart';
 
 class OnboardingCountryScreen extends ConsumerStatefulWidget {
   const OnboardingCountryScreen({super.key});
@@ -17,6 +18,7 @@ class OnboardingCountryScreen extends ConsumerStatefulWidget {
 
 class _OnboardingCountryScreenState extends ConsumerState<OnboardingCountryScreen> {
   bool _showValidationError = false;
+  bool _isPicking = false;
 
   void _handleCountrySelected(String country) {
     ref.read(onboardingControllerProvider.notifier).selectCountry(country);
@@ -50,14 +52,30 @@ class _OnboardingCountryScreenState extends ConsumerState<OnboardingCountryScree
       const SizedBox(height: AppSpacing.xl),
       _CountryField(
         value: state.country,
-        onTap: () async {
-          final selected = await context.push<String>(
-            Routes.countryPicker,
-            extra: state.country,
-          );
-          if (selected != null) {
-            _handleCountrySelected(selected);
-          }
+        onTap: () {
+          if (_isPicking) return;
+          setState(() => _isPicking = true);
+          // Capture context and current value before any await to satisfy lints.
+          final ctx = context;
+          final initial = state.country;
+          () async {
+            // Use a direct MaterialPageRoute for broader compatibility (including tests)
+            final navigator = Navigator.of(ctx);
+            final selected = await navigator.push<String>(
+              MaterialPageRoute(
+                fullscreenDialog: true,
+                builder: (_) => CountryPickerScreen(
+                  initial: initial,
+                  countries: kCommonCountries,
+                ),
+              ),
+            );
+            if (!mounted) return;
+            setState(() => _isPicking = false);
+            if (selected != null) {
+              _handleCountrySelected(selected);
+            }
+          }();
         },
         showError: _showValidationError && !canProceed,
       ),
