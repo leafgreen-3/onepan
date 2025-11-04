@@ -30,27 +30,27 @@ v1.Recipe makeRecipe({
     );
 
 void main() {
-  test('buildIngredientIndex dedupes by id, sorts by name, pins core group', () async {
+  test('buildIngredientIndex dedupes by id, sorts by id, pins core group', () async {
     final repo = _FakeRepo([
       makeRecipe(id: 'r1', ings: const [
-        v1.Ingredient(id: 'garlic', name: 'Garlic', qty: 1, unit: 'piece', category: 'spice'),
-        v1.Ingredient(id: 'onion-yellow', name: 'Yellow onion', qty: 1, unit: 'piece', category: 'vegetable'),
-        v1.Ingredient(id: 'oil-olive', name: 'Olive oil', qty: 1, unit: 'tbsp', category: 'core'),
+        v1.Ingredient(id: 'garlic', qty: 1, unit: 'piece', category: 'spice'),
+        v1.Ingredient(id: 'onion-yellow', qty: 1, unit: 'piece', category: 'vegetable'),
+        v1.Ingredient(id: 'oil-olive', qty: 1, unit: 'tbsp', category: 'core'),
       ]),
       makeRecipe(id: 'r2', ings: const [
-        v1.Ingredient(id: 'garlic', name: 'Garlic', qty: 2, unit: 'piece', category: 'spice'),
-        v1.Ingredient(id: 'spinach', name: 'Baby spinach', qty: 1, unit: 'cup', category: 'vegetable'),
-        v1.Ingredient(id: 'salt', name: 'Salt', qty: 1, unit: 'tsp', category: 'spice'),
+        v1.Ingredient(id: 'garlic', qty: 2, unit: 'piece', category: 'spice'),
+        v1.Ingredient(id: 'spinach', qty: 1, unit: 'cup', category: 'vegetable'),
+        v1.Ingredient(id: 'salt', qty: 1, unit: 'tsp', category: 'spice'),
       ]),
     ]);
 
     final index = await buildIngredientIndex(repo);
     // Deduped: garlic only once
     expect(index.all.where((i) => i.id == 'garlic').length, 1);
-    // Sorted A->Z by name
-    final names = index.all.map((e) => e.name).toList();
-    final sorted = List<String>.from(names)..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
-    expect(names, sorted);
+    // Sorted A->Z by id
+    final ids = index.all.map((e) => e.id).toList();
+    final sorted = List<String>.from(ids)..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+    expect(ids, sorted);
     // Core group contains category core and pinned ids (garlic, onion-yellow, salt)
     final coreGroup = index.groups.firstWhere((g) => g.key == 'header_core');
     final coreIds = coreGroup.items.map((e) => e.id).toSet();

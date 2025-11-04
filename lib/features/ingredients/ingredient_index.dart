@@ -31,7 +31,7 @@ Future<IngredientIndex> buildIngredientIndex(v1.RecipeRepository repo) async {
   }
 
   final all = byId.values.toList()
-    ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    ..sort((a, b) => a.id.toLowerCase().compareTo(b.id.toLowerCase()));
 
   // Core pin list: exact or prefix match for 'onion' support (e.g., onion-yellow)
   const pinnedBases = <String>{'oil-olive', 'salt', 'pepper', 'onion', 'garlic'};

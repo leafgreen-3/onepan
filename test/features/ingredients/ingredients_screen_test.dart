@@ -67,10 +67,10 @@ void main() {
 
   testWidgets('Ingredients screen shows headers, search -> results, Next payload', (tester) async {
     const ingredients = [
-      v1.Ingredient(id: 'garlic', name: 'Garlic', qty: 1, unit: 'piece', category: 'spice'),
-      v1.Ingredient(id: 'onion-yellow', name: 'Yellow onion', qty: 1, unit: 'piece', category: 'vegetable'),
-      v1.Ingredient(id: 'oil-olive', name: 'Olive oil', qty: 1, unit: 'tbsp', category: 'core'),
-      v1.Ingredient(id: 'spinach', name: 'Spinach', qty: 1, unit: 'cup', category: 'vegetable'),
+      v1.Ingredient(id: 'garlic', qty: 1, unit: 'piece', category: 'spice'),
+      v1.Ingredient(id: 'onion-yellow', qty: 1, unit: 'piece', category: 'vegetable'),
+      v1.Ingredient(id: 'oil-olive', qty: 1, unit: 'tbsp', category: 'core'),
+      v1.Ingredient(id: 'spinach', qty: 1, unit: 'cup', category: 'vegetable'),
     ];
     const recipe = v1.Recipe(
       schemaVersion: 1,

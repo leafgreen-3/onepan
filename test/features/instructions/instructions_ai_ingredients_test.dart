@@ -20,9 +20,9 @@ void main() {
     diet: 'veg',
     imageAsset: 'x',
     ingredients: [
-      v1.Ingredient(id: 'ing-1', name: 'One', qty: 1, unit: 'piece', category: 'other'),
-      v1.Ingredient(id: 'ing-2', name: 'Two', qty: 2, unit: 'piece', category: 'other'),
-      v1.Ingredient(id: 'ing-3', name: 'Three', qty: 3, unit: 'piece', category: 'other'),
+      v1.Ingredient(id: 'ing-1', qty: 1, unit: 'piece', category: 'other'),
+      v1.Ingredient(id: 'ing-2', qty: 2, unit: 'piece', category: 'other'),
+      v1.Ingredient(id: 'ing-3', qty: 3, unit: 'piece', category: 'other'),
     ],
     steps: [v1.StepItem(num: 1, text: 'Cook')],
   );

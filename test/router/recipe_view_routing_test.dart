@@ -29,7 +29,7 @@ void main() {
       timeTotalMin: 10,
       diet: 'veg',
       imageAsset: 'x',
-      ingredients: [v1.Ingredient(id: 'oil', name: 'Oil', qty: 1, unit: 'tbsp', category: 'core')],
+      ingredients: [v1.Ingredient(id: 'oil', qty: 1, unit: 'tbsp', category: 'core')],
       steps: [v1.StepItem(num: 1, text: 'Cook')],
     );
     when(() => repo.getById('r1')).thenAnswer((_) async => recipe);

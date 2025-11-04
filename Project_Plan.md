@@ -88,12 +88,9 @@ Recipe {
 
 Ingredient {
   id: string,
-  name: string,
   qty: number,
   unit: "g"|"ml"|"tbsp"|"tsp"|"cup"|"piece",
   category: "core"|"protein"|"vegetable"|"spice"|"other",
-  thumbAsset?: string,
-  thumbUrl?: string,
 }
 
 Step {
@@ -103,6 +100,10 @@ Step {
   temperatureC?: int,
 }
 ```
+
+Note: UI display names and thumbnails come from the Ingredient Catalog asset (`assets/ingredient_catalog.json`).
+The UI resolves names via locale → `en` → `id` and uses explicit catalog images (placeholder if absent). Recipe
+ingredients intentionally omit render-only fields.
 
 Params (UI → Repository)
 ```
@@ -176,4 +177,3 @@ Flow summary
 - Both LLM calls validated against schema; cache keys stable and documented.
 - All data/params use grounded names (`timeTotalMin`, `timeMode`, `diet`, units/categories enums).
 - App stable in happy paths; errors show friendly states; no crashes.
-

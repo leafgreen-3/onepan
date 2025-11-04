@@ -29,22 +29,18 @@ void main() {
     // Known id in catalog (spinach), fallback (oil-olive with asset), and unknown-no-asset
     const ingKnown = v1i.Ingredient(
       id: 'spinach',
-      name: 'Spinach Leaves',
       qty: 2,
       unit: 'cup',
       category: 'vegetable',
     );
     const ingFallback = v1i.Ingredient(
       id: 'not-in-catalog-asset',
-      name: 'Olive Oil',
       qty: 1,
       unit: 'tbsp',
       category: 'core',
-      thumbAsset: 'assets/images/ingredients/oil-olive.png',
     );
     const ingUnknown = v1i.Ingredient(
       id: 'unknown-no-asset',
-      name: 'Mystery',
       qty: 1,
       unit: 'piece',
       category: 'other',

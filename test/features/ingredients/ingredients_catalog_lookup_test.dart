@@ -13,22 +13,18 @@ void main() {
     // Build three ingredients: known in catalog, fallback with asset, and unknown
     const known = v1i.Ingredient(
       id: 'spinach',
-      name: 'Spinach Leaves',
       qty: 2,
       unit: 'cup',
       category: 'vegetable',
     );
     const fallback = v1i.Ingredient(
       id: 'not-in-catalog-asset',
-      name: 'Olive Oil',
       qty: 1,
       unit: 'tbsp',
       category: 'core',
-      thumbAsset: 'assets/images/ingredients/oil-olive.png',
     );
     const unknown = v1i.Ingredient(
       id: 'unknown-no-asset',
-      name: 'Mystery',
       qty: 1,
       unit: 'piece',
       category: 'other',

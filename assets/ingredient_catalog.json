@@ -2,60 +2,68 @@
   "version": 1,
   "items": [
     {
-      "id": "bell-pepper",
+      "id": "bell-pepper-red",
       "names": {
-        "en": "Bell pepper"
+        "en": "Red Bell Pepper"
       },
-      "image": "",
-      "aliases": []
+      "image": "assets/ingredients/bell-pepper-red.png",
+      "aliases": [
+        "bell-pepper"
+      ]
     },
     {
       "id": "black-beans",
       "names": {
-        "en": "Cooked black beans"
+        "en": "Cooked Black Beans"
       },
-      "image": "",
+      "image": "assets/ingredients/black-beans.png",
       "aliases": []
     },
     {
       "id": "broccoli",
       "names": {
-        "en": "Broccoli florets"
+        "en": "Broccoli Florets"
       },
-      "image": "",
+      "image": "assets/ingredients/broccoli.png",
       "aliases": []
     },
     {
-      "id": "broth",
+      "id": "butter-unsalted",
       "names": {
-        "en": "Vegetable broth"
+        "en": "Unsalted Butter"
       },
-      "image": "",
-      "aliases": []
-    },
-    {
-      "id": "butter",
-      "names": {
-        "en": "Unsalted butter"
-      },
-      "image": "",
-      "aliases": []
+      "image": "assets/ingredients/butter-unsalted.png",
+      "aliases": [
+        "butter"
+      ]
     },
     {
       "id": "carrot",
       "names": {
-        "en": "Sliced carrot"
+        "en": "Carrot"
       },
-      "image": "",
+      "image": "assets/ingredients/carrot.png",
       "aliases": []
     },
     {
-      "id": "chicken-thigh",
+      "id": "chicken-stock",
       "names": {
-        "en": "Boneless chicken thighs"
+        "en": "Chicken Stock"
       },
       "image": "",
-      "aliases": []
+      "aliases": [
+        "stock"
+      ]
+    },
+    {
+      "id": "chicken-thigh-boneless",
+      "names": {
+        "en": "Boneless Chicken Thighs"
+      },
+      "image": "",
+      "aliases": [
+        "chicken-thigh"
+      ]
     },
     {
       "id": "chickpea",
@@ -69,43 +77,45 @@
       ]
     },
     {
-      "id": "chipotle",
+      "id": "chipotle-chili-paste",
       "names": {
-        "en": "Chipotle chili paste"
+        "en": "Chipotle Chili Paste"
       },
       "image": "",
-      "aliases": []
+      "aliases": [
+        "chipotle"
+      ]
     },
     {
       "id": "cilantro",
       "names": {
-        "en": "Fresh cilantro"
+        "en": "Cilantro"
       },
-      "image": "",
+      "image": "assets/ingredients/cilantro.png",
       "aliases": []
     },
     {
       "id": "corn",
       "names": {
-        "en": "Sweet corn kernels"
+        "en": "Sweet Corn Kernels"
       },
-      "image": "",
+      "image": "assets/ingredients/corn.png",
       "aliases": []
     },
     {
       "id": "garlic",
       "names": {
-        "en": "Garlic cloves"
+        "en": "Garlic Cloves"
       },
-      "image": "",
+      "image": "assets/ingredients/garlic.png",
       "aliases": []
     },
     {
       "id": "ginger",
       "names": {
-        "en": "Fresh ginger"
+        "en": "Ginger"
       },
-      "image": "",
+      "image": "assets/ingredients/ginger.png",
       "aliases": []
     },
     {
@@ -117,25 +127,39 @@
       "aliases": []
     },
     {
-      "id": "lime",
+      "id": "lemon-juice",
       "names": {
-        "en": "Lime juice"
+        "en": "Lemon Juice"
       },
       "image": "",
-      "aliases": []
+      "aliases": [
+        "lemon"
+      ]
     },
     {
-      "id": "miso",
+      "id": "lime-juice",
       "names": {
-        "en": "White miso"
+        "en": "Lime Juice"
       },
       "image": "",
-      "aliases": []
+      "aliases": [
+        "lime"
+      ]
+    },
+    {
+      "id": "miso-white",
+      "names": {
+        "en": "White Miso"
+      },
+      "image": "assets/ingredients/miso-white.png",
+      "aliases": [
+        "miso"
+      ]
     },
     {
       "id": "oil-olive",
       "names": {
-        "en": "Olive oil"
+        "en": "Olive Oil"
       },
       "image": "assets/ingredients/oil-olive.png",
       "aliases": [
@@ -146,65 +170,69 @@
     {
       "id": "oil-sesame",
       "names": {
-        "en": "Sesame oil"
+        "en": "Sesame Oil"
       },
-      "image": "",
+      "image": "assets/ingredients/oil-sesame.png",
       "aliases": []
     },
     {
       "id": "onion-yellow",
       "names": {
-        "en": "Yellow onion"
+        "en": "Yellow Onion"
       },
-      "image": "",
+      "image": "assets/ingredients/onion-yellow.png",
       "aliases": []
     },
     {
       "id": "orzo",
       "names": {
-        "en": "Dry orzo"
+        "en": "Dry Orzo"
       },
-      "image": "",
+      "image": "assets/ingredients/orzo.png",
       "aliases": []
     },
     {
-      "id": "paprika",
+      "id": "paprika-smoked",
       "names": {
-        "en": "Smoked paprika"
+        "en": "Smoked Paprika"
       },
-      "image": "",
-      "aliases": []
+      "image": "assets/ingredients/paprika-smoked.png",
+      "aliases": [
+        "paprika"
+      ]
     },
     {
       "id": "parsley",
       "names": {
-        "en": "Chopped parsley"
+        "en": "Parsley"
       },
-      "image": "",
+      "image": "assets/ingredients/parsley.png",
       "aliases": []
     },
     {
       "id": "peas",
       "names": {
-        "en": "Frozen peas"
+        "en": "Frozen Peas"
       },
-      "image": "",
+      "image": "assets/ingredients/peas.png",
       "aliases": []
     },
     {
-      "id": "potato",
+      "id": "potato-baby",
       "names": {
-        "en": "Baby potatoes"
+        "en": "Baby Potatoes"
       },
       "image": "",
-      "aliases": []
+      "aliases": [
+        "potato"
+      ]
     },
     {
       "id": "rosemary",
       "names": {
-        "en": "Fresh rosemary"
+        "en": "Rosemary"
       },
-      "image": "",
+      "image": "assets/ingredients/rosemary.png",
       "aliases": []
     },
     {
@@ -212,23 +240,23 @@
       "names": {
         "en": "Salt"
       },
-      "image": "",
+      "image": "assets/ingredients/salt.png",
       "aliases": []
     },
     {
       "id": "shrimp",
       "names": {
-        "en": "Raw shrimp"
+        "en": "Raw Shrimp"
       },
-      "image": "",
+      "image": "assets/ingredients/shrimp.png",
       "aliases": []
     },
     {
       "id": "soy-sauce",
       "names": {
-        "en": "Low-sodium soy sauce"
+        "en": "Low-sodium Soy Sauce"
       },
-      "image": "",
+      "image": "assets/ingredients/soy-sauce.png",
       "aliases": []
     },
     {
@@ -240,43 +268,46 @@
       "aliases": []
     },
     {
-      "id": "stock",
-      "names": {
-        "en": "Chicken stock"
-      },
-      "image": "",
-      "aliases": []
-    },
-    {
       "id": "thyme",
       "names": {
-        "en": "Fresh thyme"
+        "en": "Thyme"
       },
-      "image": "",
+      "image": "assets/ingredients/thyme.png",
       "aliases": []
     },
     {
       "id": "tofu-firm",
       "names": {
-        "en": "Firm tofu"
+        "en": "Firm Tofu"
       },
-      "image": "",
+      "image": "assets/ingredients/tofu-firm.png",
       "aliases": []
     },
     {
       "id": "tomato",
       "names": {
-        "en": "Diced tomatoes"
+        "en": "Tomatoes"
       },
-      "image": "",
+      "image": "assets/ingredients/tomato.png",
       "aliases": []
+    },
+    {
+      "id": "vegetable-broth",
+      "names": {
+        "en": "Vegetable Broth"
+      },
+      "image": "assets/ingredients/vegetable-broth.png",
+      "aliases": [
+        "broth",
+        "veg broth"
+      ]
     },
     {
       "id": "water",
       "names": {
         "en": "Water"
       },
-      "image": "",
+      "image": "assets/ingredients/water.png",
       "aliases": []
     }
   ]
