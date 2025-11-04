@@ -47,9 +47,7 @@ final filteredGroupsProvider = Provider<List<IngredientGroup>>((ref) {
     data: (index) {
       if (query.isEmpty) return index.groups;
       final results = index.all
-          .where((ing) =>
-              ing.name.toLowerCase().contains(query) ||
-              ing.id.toLowerCase().contains(query))
+          .where((ing) => ing.id.toLowerCase().contains(query))
           .toList(growable: false);
       return [
         IngredientGroup(

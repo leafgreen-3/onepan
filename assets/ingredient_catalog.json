@@ -1,0 +1,314 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "bell-pepper-red",
+      "names": {
+        "en": "Red Bell Pepper"
+      },
+      "image": "assets/ingredients/bell-pepper-red.png",
+      "aliases": [
+        "bell-pepper"
+      ]
+    },
+    {
+      "id": "black-beans",
+      "names": {
+        "en": "Cooked Black Beans"
+      },
+      "image": "assets/ingredients/black-beans.png",
+      "aliases": []
+    },
+    {
+      "id": "broccoli",
+      "names": {
+        "en": "Broccoli Florets"
+      },
+      "image": "assets/ingredients/broccoli.png",
+      "aliases": []
+    },
+    {
+      "id": "butter-unsalted",
+      "names": {
+        "en": "Unsalted Butter"
+      },
+      "image": "assets/ingredients/butter-unsalted.png",
+      "aliases": [
+        "butter"
+      ]
+    },
+    {
+      "id": "carrot",
+      "names": {
+        "en": "Carrot"
+      },
+      "image": "assets/ingredients/carrot.png",
+      "aliases": []
+    },
+    {
+      "id": "chicken-stock",
+      "names": {
+        "en": "Chicken Stock"
+      },
+      "image": "",
+      "aliases": [
+        "stock"
+      ]
+    },
+    {
+      "id": "chicken-thigh-boneless",
+      "names": {
+        "en": "Boneless Chicken Thighs"
+      },
+      "image": "",
+      "aliases": [
+        "chicken-thigh"
+      ]
+    },
+    {
+      "id": "chickpea",
+      "names": {
+        "en": "Chickpeas"
+      },
+      "image": "assets/ingredients/chickpea.png",
+      "aliases": [
+        "garbanzo",
+        "garbanzo beans"
+      ]
+    },
+    {
+      "id": "chipotle-chili-paste",
+      "names": {
+        "en": "Chipotle Chili Paste"
+      },
+      "image": "",
+      "aliases": [
+        "chipotle"
+      ]
+    },
+    {
+      "id": "cilantro",
+      "names": {
+        "en": "Cilantro"
+      },
+      "image": "assets/ingredients/cilantro.png",
+      "aliases": []
+    },
+    {
+      "id": "corn",
+      "names": {
+        "en": "Sweet Corn Kernels"
+      },
+      "image": "assets/ingredients/corn.png",
+      "aliases": []
+    },
+    {
+      "id": "garlic",
+      "names": {
+        "en": "Garlic Cloves"
+      },
+      "image": "assets/ingredients/garlic.png",
+      "aliases": []
+    },
+    {
+      "id": "ginger",
+      "names": {
+        "en": "Ginger"
+      },
+      "image": "assets/ingredients/ginger.png",
+      "aliases": []
+    },
+    {
+      "id": "lemon",
+      "names": {
+        "en": "Lemon"
+      },
+      "image": "assets/ingredients/lemon.png",
+      "aliases": []
+    },
+    {
+      "id": "lemon-juice",
+      "names": {
+        "en": "Lemon Juice"
+      },
+      "image": "",
+      "aliases": [
+        "lemon"
+      ]
+    },
+    {
+      "id": "lime-juice",
+      "names": {
+        "en": "Lime Juice"
+      },
+      "image": "",
+      "aliases": [
+        "lime"
+      ]
+    },
+    {
+      "id": "miso-white",
+      "names": {
+        "en": "White Miso"
+      },
+      "image": "assets/ingredients/miso-white.png",
+      "aliases": [
+        "miso"
+      ]
+    },
+    {
+      "id": "oil-olive",
+      "names": {
+        "en": "Olive Oil"
+      },
+      "image": "assets/ingredients/oil-olive.png",
+      "aliases": [
+        "olive",
+        "olive oil"
+      ]
+    },
+    {
+      "id": "oil-sesame",
+      "names": {
+        "en": "Sesame Oil"
+      },
+      "image": "assets/ingredients/oil-sesame.png",
+      "aliases": []
+    },
+    {
+      "id": "onion-yellow",
+      "names": {
+        "en": "Yellow Onion"
+      },
+      "image": "assets/ingredients/onion-yellow.png",
+      "aliases": []
+    },
+    {
+      "id": "orzo",
+      "names": {
+        "en": "Dry Orzo"
+      },
+      "image": "assets/ingredients/orzo.png",
+      "aliases": []
+    },
+    {
+      "id": "paprika-smoked",
+      "names": {
+        "en": "Smoked Paprika"
+      },
+      "image": "assets/ingredients/paprika-smoked.png",
+      "aliases": [
+        "paprika"
+      ]
+    },
+    {
+      "id": "parsley",
+      "names": {
+        "en": "Parsley"
+      },
+      "image": "assets/ingredients/parsley.png",
+      "aliases": []
+    },
+    {
+      "id": "peas",
+      "names": {
+        "en": "Peas"
+      },
+      "image": "assets/ingredients/peas.png",
+      "aliases": []
+    },
+    {
+      "id": "potato-baby",
+      "names": {
+        "en": "Baby Potatoes"
+      },
+      "image": "",
+      "aliases": [
+        "potato"
+      ]
+    },
+    {
+      "id": "rosemary",
+      "names": {
+        "en": "Rosemary"
+      },
+      "image": "assets/ingredients/rosemary.png",
+      "aliases": []
+    },
+    {
+      "id": "salt",
+      "names": {
+        "en": "Salt"
+      },
+      "image": "assets/ingredients/salt.png",
+      "aliases": []
+    },
+    {
+      "id": "shrimp",
+      "names": {
+        "en": "Raw Shrimp"
+      },
+      "image": "assets/ingredients/shrimp.png",
+      "aliases": []
+    },
+    {
+      "id": "soy-sauce",
+      "names": {
+        "en": "Soy Sauce"
+      },
+      "image": "assets/ingredients/soy-sauce.png",
+      "aliases": []
+    },
+    {
+      "id": "spinach",
+      "names": {
+        "en": "Spinach"
+      },
+      "image": "assets/ingredients/spinach.png",
+      "aliases": []
+    },
+    {
+      "id": "thyme",
+      "names": {
+        "en": "Thyme"
+      },
+      "image": "assets/ingredients/thyme.png",
+      "aliases": []
+    },
+    {
+      "id": "tofu-firm",
+      "names": {
+        "en": "Firm Tofu"
+      },
+      "image": "assets/ingredients/tofu-firm.png",
+      "aliases": []
+    },
+    {
+      "id": "tomato",
+      "names": {
+        "en": "Tomatoes"
+      },
+      "image": "assets/ingredients/tomato.png",
+      "aliases": []
+    },
+    {
+      "id": "vegetable-broth",
+      "names": {
+        "en": "Vegetable Broth"
+      },
+      "image": "assets/ingredients/vegetable-broth.png",
+      "aliases": [
+        "broth",
+        "veg broth"
+      ]
+    },
+    {
+      "id": "water",
+      "names": {
+        "en": "Water"
+      },
+      "image": "assets/ingredients/water.png",
+      "aliases": []
+    }
+  ]
+}

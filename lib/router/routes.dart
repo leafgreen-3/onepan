@@ -7,6 +7,7 @@ class Routes {
   static const onboardingCountry = '/onboarding/country';
   static const onboardingLevel = '/onboarding/level';
   static const onboardingDiet = '/onboarding/diet';
+  static const countryPicker = '/onboarding/country/picker';
   static const home = '/home';
   static const saved = '/saved';
   static const settings = '/settings';

@@ -69,7 +69,6 @@ v1.Recipe makeRecipe({String id = 'r1', String title = 'Chickpea OnePan'}) => v1
       ingredients: const [
         v1.Ingredient(
           id: 'oil',
-          name: 'Oil',
           qty: 1,
           unit: 'tbsp',
           category: 'core',

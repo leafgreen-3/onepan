@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:onepan/features/customize/customize_providers.dart';
 import 'package:onepan/theme/tokens.dart';
+import 'package:onepan/features/customize/spice/spice_selector.dart';
+import 'package:onepan/features/customize/time/time_selector.dart';
 import 'package:onepan/router/routes.dart';
 import 'package:onepan/ui/atoms/app_button.dart';
 
@@ -42,24 +44,18 @@ class CustomizeScreen extends ConsumerWidget {
 
               const SizedBox(height: AppSpacing.xl),
 
-              // Time segmented (Regular on the left, Fast on the right)
+              // Time selection: stacked cards using per-recipe provider
               _SectionCard(
                 title: 'Time',
-                child: _TimeSegmented(
-                  value: model.time,
-                  onSelect: (t) => ctrl.setTime(t),
-                ),
+                child: TimeSelector(recipeId: id),
               ),
 
               const SizedBox(height: AppSpacing.xl),
 
-              // Spice segmented with emoji and heat colors
+              // Spice level slider card (in-memory via provider)
               _SectionCard(
-                title: 'Spice',
-                child: _SpiceSegmented(
-                  value: model.spice,
-                  onSelect: (s) => ctrl.setSpice(s),
-                ),
+                title: 'Spice level',
+                child: SpiceSelector(recipeId: id),
               ),
 
               const SizedBox(height: AppSpacing.xl),
@@ -132,7 +128,6 @@ class _ServingsStepper extends StatelessWidget {
     required this.onDec,
     required this.onInc,
   });
-
   final int value;
   final VoidCallback onDec;
   final VoidCallback onInc;
@@ -194,199 +189,4 @@ class _BigIconButton extends StatelessWidget {
   }
 }
 
-class _TimeSegmented extends StatelessWidget {
-  const _TimeSegmented({required this.value, required this.onSelect});
-  final String value; // 'regular' | 'fast'
-  final ValueChanged<String> onSelect;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final radius = BorderRadius.circular(AppRadii.lg);
-    final selectedIndex = value == 'fast' ? 1 : 0;
-
-    return LayoutBuilder(builder: (context, constraints) {
-      final w = constraints.maxWidth;
-      final segW = w / 2;
-      return Container(
-        decoration: ShapeDecoration(
-          color: scheme.surfaceContainerLow,
-          shape: RoundedRectangleBorder(
-            borderRadius: radius,
-            side: BorderSide(color: scheme.outlineVariant),
-          ),
-        ),
-        padding: const EdgeInsets.all(AppSpacing.xs),
-        height: AppSizes.minTouchTarget,
-        child: Stack(
-          children: [
-            AnimatedPositioned(
-              duration: AppDurations.normal,
-              curve: Curves.easeOut,
-              left: segW * selectedIndex,
-              width: segW,
-              top: 0,
-              bottom: 0,
-              child: Container(
-                decoration: ShapeDecoration(
-                  color: scheme.primaryContainer,
-                  shape: RoundedRectangleBorder(borderRadius: radius),
-                ),
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    key: const Key('time_regular'),
-                    onTap: () => onSelect('regular'),
-                    borderRadius: radius,
-                    child: Center(
-                      child: Text(
-                        '⏳ Regular',
-                        style: AppTextStyles.label.copyWith(
-                          color: selectedIndex == 0
-                              ? scheme.onPrimaryContainer
-                              : scheme.onSurface,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    key: const Key('time_fast'),
-                    onTap: () => onSelect('fast'),
-                    borderRadius: radius,
-                    child: Center(
-                      child: Text(
-                        '⚡ Fast',
-                        style: AppTextStyles.label.copyWith(
-                          color: selectedIndex == 1
-                              ? scheme.onPrimaryContainer
-                              : scheme.onSurface,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    });
-  }
-}
-
-class _SpiceSegmented extends StatelessWidget {
-  const _SpiceSegmented({required this.value, required this.onSelect});
-  final String value; // 'mild' | 'medium' | 'spicy'
-  final ValueChanged<String> onSelect;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final radius = BorderRadius.circular(AppRadii.lg);
-    final index = switch (value) {
-      'mild' => 0,
-      'spicy' => 2,
-      _ => 1,
-    };
-    final color = switch (value) {
-      'mild' => AppColors.spiceL,
-      'spicy' => AppColors.spiceH,
-      _ => AppColors.spiceM,
-    };
-
-    return LayoutBuilder(builder: (context, constraints) {
-      final w = constraints.maxWidth;
-      final segW = w / 3;
-      return Container(
-        decoration: ShapeDecoration(
-          color: scheme.surfaceContainerLow,
-          shape: RoundedRectangleBorder(
-            borderRadius: radius,
-            side: BorderSide(color: scheme.outlineVariant),
-          ),
-        ),
-        padding: const EdgeInsets.all(AppSpacing.xs),
-        height: AppSizes.minTouchTarget,
-        child: Stack(
-          children: [
-            AnimatedPositioned(
-              duration: AppDurations.normal,
-              curve: Curves.easeOut,
-              left: segW * index,
-              width: segW,
-              top: 0,
-              bottom: 0,
-              child: Container(
-                decoration: ShapeDecoration(
-                  color: color,
-                  shape: RoundedRectangleBorder(borderRadius: radius),
-                ),
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    key: const Key('spice_mild'),
-                    onTap: () => onSelect('mild'),
-                    borderRadius: radius,
-                    child: Center(
-                      child: Text(
-                        'Mild 🌶️',
-                        style: AppTextStyles.label.copyWith(
-                          color: index == 0
-                              ? scheme.onPrimaryContainer
-                              : scheme.onSurface,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    key: const Key('spice_medium'),
-                    onTap: () => onSelect('medium'),
-                    borderRadius: radius,
-                    child: Center(
-                      child: Text(
-                        'Medium 🌶️🌶️',
-                        style: AppTextStyles.label.copyWith(
-                          color: index == 1
-                              ? scheme.onPrimaryContainer
-                              : scheme.onSurface,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    key: const Key('spice_spicy'),
-                    onTap: () => onSelect('spicy'),
-                    borderRadius: radius,
-                    child: Center(
-                      child: Text(
-                        'Spicy 🌶️🌶️🌶️',
-                        style: AppTextStyles.label.copyWith(
-                          color: index == 2
-                              ? scheme.onPrimaryContainer
-                              : scheme.onSurface,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    });
-  }
-}
-
+// Legacy time segmented control removed; replaced by TimeSelector.

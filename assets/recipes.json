@@ -13,7 +13,7 @@
       {"id": "garlic", "name": "Garlic cloves", "qty": 2, "unit": "piece", "category": "spice"},
       {"id": "chickpea", "name": "Cooked chickpeas", "qty": 240, "unit": "g", "category": "protein"},
       {"id": "spinach", "name": "Baby spinach", "qty": 120, "unit": "g", "category": "vegetable"},
-      {"id": "paprika", "name": "Smoked paprika", "qty": 0.5, "unit": "tsp", "category": "spice"},
+      {"id": "paprika-smoked", "name": "Smoked paprika", "qty": 0.5, "unit": "tsp", "category": "spice"},
       {"id": "salt", "name": "Salt", "qty": 0.5, "unit": "tsp", "category": "spice"}
     ],
     "steps": [
@@ -32,13 +32,13 @@
     "imageAsset": "assets/images/recipes/lemon-garlic-shrimp-orzo.png",
     "imageUrl": "",
     "ingredients": [
-      {"id": "butter", "name": "Unsalted butter", "qty": 1, "unit": "tbsp", "category": "core"},
+      {"id": "butter-unsalted", "name": "Unsalted butter", "qty": 1, "unit": "tbsp", "category": "core"},
       {"id": "shrimp", "name": "Raw shrimp", "qty": 250, "unit": "g", "category": "protein"},
       {"id": "garlic", "name": "Garlic cloves", "qty": 3, "unit": "piece", "category": "spice"},
       {"id": "orzo", "name": "Dry orzo", "qty": 1.5, "unit": "cup", "category": "core"},
-      {"id": "broth", "name": "Vegetable broth", "qty": 480, "unit": "ml", "category": "core"},
+      {"id": "vegetable-broth", "name": "Vegetable broth", "qty": 480, "unit": "ml", "category": "core"},
       {"id": "spinach", "name": "Baby spinach", "qty": 80, "unit": "g", "category": "vegetable"},
-      {"id": "lemon", "name": "Lemon juice", "qty": 2, "unit": "tbsp", "category": "other"},
+      {"id": "lemon-juice", "name": "Lemon juice", "qty": 2, "unit": "tbsp", "category": "other"},
       {"id": "parsley", "name": "Chopped parsley", "qty": 2, "unit": "tbsp", "category": "other"},
       {"id": "salt", "name": "Salt", "qty": 0.5, "unit": "tsp", "category": "spice"}
     ],
@@ -61,7 +61,7 @@
       {"id": "oil-sesame", "name": "Sesame oil", "qty": 1, "unit": "tbsp", "category": "core"},
       {"id": "tofu-firm", "name": "Firm tofu", "qty": 280, "unit": "g", "category": "protein"},
       {"id": "ginger", "name": "Fresh ginger", "qty": 1, "unit": "tbsp", "category": "spice"},
-      {"id": "miso", "name": "White miso", "qty": 2, "unit": "tbsp", "category": "other"},
+      {"id": "miso-white", "name": "White miso", "qty": 2, "unit": "tbsp", "category": "other"},
       {"id": "soy-sauce", "name": "Low-sodium soy sauce", "qty": 2, "unit": "tbsp", "category": "other"},
       {"id": "broccoli", "name": "Broccoli florets", "qty": 180, "unit": "g", "category": "vegetable"},
       {"id": "carrot", "name": "Sliced carrot", "qty": 90, "unit": "g", "category": "vegetable"},
@@ -84,12 +84,12 @@
     "imageUrl": "",
     "ingredients": [
       {"id": "oil-olive", "name": "Olive oil", "qty": 1, "unit": "tbsp", "category": "core", "thumbAsset": "assets/images/ingredients/oil-olive.png"},
-      {"id": "bell-pepper", "name": "Bell pepper", "qty": 150, "unit": "g", "category": "vegetable"},
+      {"id": "bell-pepper-red", "name": "Red bell pepper", "qty": 150, "unit": "g", "category": "vegetable"},
       {"id": "corn", "name": "Sweet corn kernels", "qty": 160, "unit": "g", "category": "vegetable"},
       {"id": "black-beans", "name": "Cooked black beans", "qty": 260, "unit": "g", "category": "protein"},
       {"id": "tomato", "name": "Diced tomatoes", "qty": 200, "unit": "g", "category": "vegetable"},
-      {"id": "chipotle", "name": "Chipotle chili paste", "qty": 1, "unit": "tbsp", "category": "spice"},
-      {"id": "lime", "name": "Lime juice", "qty": 1, "unit": "tbsp", "category": "other"},
+      {"id": "chipotle-chili-paste", "name": "Chipotle chili paste", "qty": 1, "unit": "tbsp", "category": "spice"},
+      {"id": "lime-juice", "name": "Lime juice", "qty": 1, "unit": "tbsp", "category": "other"},
       {"id": "cilantro", "name": "Fresh cilantro", "qty": 2, "unit": "tbsp", "category": "other"}
     ],
     "steps": [
@@ -108,12 +108,12 @@
     "imageUrl": "",
     "ingredients": [
       {"id": "oil-olive", "name": "Olive oil", "qty": 1, "unit": "tbsp", "category": "core", "thumbAsset": "assets/images/ingredients/oil-olive.png"},
-      {"id": "chicken-thigh", "name": "Boneless chicken thighs", "qty": 400, "unit": "g", "category": "protein"},
-      {"id": "potato", "name": "Baby potatoes", "qty": 320, "unit": "g", "category": "vegetable"},
+      {"id": "chicken-thigh-boneless", "name": "Boneless chicken thighs", "qty": 400, "unit": "g", "category": "protein"},
+      {"id": "potato-baby", "name": "Baby potatoes", "qty": 320, "unit": "g", "category": "vegetable"},
       {"id": "rosemary", "name": "Fresh rosemary", "qty": 1, "unit": "tbsp", "category": "spice"},
       {"id": "thyme", "name": "Fresh thyme", "qty": 1, "unit": "tbsp", "category": "spice"},
       {"id": "garlic", "name": "Garlic cloves", "qty": 3, "unit": "piece", "category": "spice"},
-      {"id": "stock", "name": "Chicken stock", "qty": 180, "unit": "ml", "category": "core"},
+      {"id": "chicken-stock", "name": "Chicken stock", "qty": 180, "unit": "ml", "category": "core"},
       {"id": "peas", "name": "Frozen peas", "qty": 120, "unit": "g", "category": "vegetable"},
       {"id": "salt", "name": "Salt", "qty": 0.75, "unit": "tsp", "category": "spice"}
     ],

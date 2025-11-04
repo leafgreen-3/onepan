@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:onepan/app/services/preferences_service.dart';
+import 'package:onepan/features/onboarding/skill/skill_level.dart';
 
 @immutable
 class OnboardingState {
@@ -10,12 +11,14 @@ class OnboardingState {
     this.level,
     this.diet,
     this.hasFinished = false,
+    this.skillLevel,
   });
 
   final String? country;
   final String? level;
   final String? diet;
   final bool hasFinished;
+  final SkillLevel? skillLevel;
 
   bool get hasAllSelections => country != null && level != null && diet != null;
 
@@ -26,12 +29,14 @@ class OnboardingState {
     String? level,
     String? diet,
     bool? hasFinished,
+    SkillLevel? skillLevel,
   }) {
     return OnboardingState(
       country: country ?? this.country,
       level: level ?? this.level,
       diet: diet ?? this.diet,
       hasFinished: hasFinished ?? this.hasFinished,
+      skillLevel: skillLevel ?? this.skillLevel,
     );
   }
 }
@@ -54,6 +59,7 @@ class OnboardingController extends StateNotifier<OnboardingState> {
       level: saved['level'],
       diet: saved['diet'],
       hasFinished: true,
+      skillLevel: _skillFromTitle(saved['level']),
     );
   }
 
@@ -67,6 +73,13 @@ class OnboardingController extends StateNotifier<OnboardingState> {
   void selectLevel(String level) {
     state = state.copyWith(
       level: level,
+      hasFinished: false,
+    );
+  }
+
+  void selectSkillLevel(SkillLevel level) {
+    state = state.copyWith(
+      skillLevel: level,
       hasFinished: false,
     );
   }
@@ -96,5 +109,18 @@ class OnboardingController extends StateNotifier<OnboardingState> {
   Future<void> clear() async {
     await _preferences.clearOnboarding();
     state = const OnboardingState();
+  }
+}
+
+SkillLevel? _skillFromTitle(String? title) {
+  switch (title) {
+    case 'Beginner':
+      return SkillLevel.beginner;
+    case 'Intermediate':
+      return SkillLevel.intermediate;
+    case 'Advanced':
+      return SkillLevel.advanced;
+    default:
+      return null;
   }
 }

@@ -9,6 +9,10 @@ import 'package:onepan/features/recipe/recipe_providers.dart';
 import 'package:onepan/features/recipe/recipe_mode.dart';
 import 'package:onepan/theme/tokens.dart';
 import 'package:onepan/ui/atoms/empty_state.dart';
+import 'package:onepan/services/ingredient_catalog/ingredient_catalog_provider.dart';
+
+// Track missing-catalog warnings to avoid spamming logs.
+final Set<String> _catalogWarnedIds = <String>{};
 
 class InstructionsScreen extends ConsumerWidget {
   const InstructionsScreen({super.key, required this.recipeId, required this.mode});
@@ -145,7 +149,7 @@ class InstructionsScreen extends ConsumerWidget {
   }
 }
 
-class _IngredientsTab extends StatelessWidget {
+class _IngredientsTab extends ConsumerWidget {
   const _IngredientsTab({
     required this.ingredients,
     required this.showAiBanner,
@@ -154,7 +158,7 @@ class _IngredientsTab extends StatelessWidget {
   final bool showAiBanner;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
     if (ingredients.isEmpty) {
       return const EmptyState(
@@ -163,51 +167,74 @@ class _IngredientsTab extends StatelessWidget {
       );
     }
 
-    return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.xl,
-        AppSpacing.md,
-        AppSpacing.xl,
-        AppSpacing.xl,
-      ),
-      itemBuilder: (context, index) {
-        if (index == 0 && showAiBanner) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.md),
-            child: Text(
-              'AI mode active: showing full list (no picks found).',
-              style: AppTextStyles.label.copyWith(
-                color: scheme.onSurface.withValues(alpha: AppOpacity.mediumText),
-              ),
-            ),
-          );
-        }
-        final item = ingredients[index - (showAiBanner ? 1 : 0)];
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _ThumbOrPlaceholder(ing: item),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(item.name, style: AppTextStyles.body.copyWith(color: scheme.onSurface)),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    '${item.qty} ${item.unit}',
-                    style: AppTextStyles.label.copyWith(
-                      color: scheme.onSurface.withValues(alpha: AppOpacity.mediumText),
-                    ),
+    final catalog = ref.read(ingredientCatalogProvider);
+    final locale = Localizations.localeOf(context);
+
+    return FutureBuilder<void>(
+      future: catalog.ensureInitialized(),
+      builder: (context, snapshot) {
+        return ListView.separated(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.xl,
+            AppSpacing.md,
+            AppSpacing.xl,
+            AppSpacing.xl,
+          ),
+          itemBuilder: (context, index) {
+            if (index == 0 && showAiBanner) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                child: Text(
+                  'AI mode active: showing full list (no picks found).',
+                  style: AppTextStyles.label.copyWith(
+                    color:
+                        scheme.onSurface.withValues(alpha: AppOpacity.mediumText),
                   ),
-                ],
-              ),
-            ),
-          ],
+                ),
+              );
+            }
+            final item = ingredients[index - (showAiBanner ? 1 : 0)];
+
+            final bool inCatalog = catalog.has(item.id);
+            if (!inCatalog && !_catalogWarnedIds.contains(item.id)) {
+              debugPrint('⚠ IngredientCatalog missing: ${item.id}');
+              _catalogWarnedIds.add(item.id);
+            }
+
+            final String name = catalog.displayName(item.id, locale: locale);
+
+            final ImageProvider? resolvedImage = catalog.imageProvider(item.id);
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _ThumbOrPlaceholder(id: item.id, image: resolvedImage),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(name,
+                          style: AppTextStyles.body
+                              .copyWith(color: scheme.onSurface)),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        '${item.qty} ${item.unit}',
+                        style: AppTextStyles.label.copyWith(
+                          color: scheme.onSurface
+                              .withValues(alpha: AppOpacity.mediumText),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+          separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
+          itemCount: ingredients.length + (showAiBanner ? 1 : 0),
         );
       },
-      separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
-      itemCount: ingredients.length + (showAiBanner ? 1 : 0),
     );
   }
 }
@@ -281,8 +308,9 @@ class _StepsTab extends StatelessWidget {
 }
 
 class _ThumbOrPlaceholder extends StatelessWidget {
-  const _ThumbOrPlaceholder({required this.ing});
-  final v1i.Ingredient ing;
+  const _ThumbOrPlaceholder({required this.id, this.image});
+  final String id;
+  final ImageProvider? image;
 
   @override
   Widget build(BuildContext context) {
@@ -291,7 +319,7 @@ class _ThumbOrPlaceholder extends StatelessWidget {
     final border = BorderRadius.circular(AppRadii.md);
 
     Widget placeholder() => Container(
-          key: Key('ing_thumb_placeholder_${ing.id}'),
+          key: Key('ing_thumb_placeholder_$id'),
           width: size,
           height: size,
           decoration: BoxDecoration(
@@ -306,26 +334,11 @@ class _ThumbOrPlaceholder extends StatelessWidget {
           ),
         );
 
-    final asset = ing.thumbAsset;
-    final url = ing.thumbUrl;
-
-    if (asset != null && asset.isNotEmpty) {
+    if (image != null) {
       return ClipRRect(
         borderRadius: border,
-        child: Image.asset(
-          asset,
-          width: size,
-          height: size,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => placeholder(),
-        ),
-      );
-    }
-    if (url != null && url.isNotEmpty) {
-      return ClipRRect(
-        borderRadius: border,
-        child: Image.network(
-          url,
+        child: Image(
+          image: image!,
           width: size,
           height: size,
           fit: BoxFit.cover,

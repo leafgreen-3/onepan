@@ -66,9 +66,8 @@ void main() {
       await tester.tap(find.byKey(const Key('time_fast')));
       await tester.pump();
 
-      // Toggle spice to spicy
-      await tester.tap(find.byKey(const Key('spice_spicy')));
-      await tester.pump();
+      // Spice selection now handled by SpiceSelector slider (separate provider).
+      // No-op here; payload still contains defaults for spice in CustomizeState.
 
       // Next → navigates to recipe (original ingredient picker screen)
       await tester.tap(find.byKey(const Key('customize_next')));
@@ -115,8 +114,7 @@ void main() {
     await tester.pump();
     await tester.tap(find.byKey(const Key('time_fast')));
     await tester.pump();
-    await tester.tap(find.byKey(const Key('spice_spicy')));
-    await tester.pump();
+    // Spice selection via slider is out of scope for this payload test.
 
     // Navigate
     await tester.tap(find.byKey(const Key('customize_next')));

@@ -139,7 +139,7 @@ Param Structure (UI → repository)
 Response (Finalizer)
 ```jsonc
 {
-  "finalIngredients": [ { "id": "shrimp", "name": "Raw shrimp", "qty": 250, "unit": "g", "category": "protein" } ],
+  "finalIngredients": [ { "id": "shrimp", "qty": 250, "unit": "g", "category": "protein" } ],
   "substitutions": [
     { "from": "butter", "to": "olive oil", "note": "availability-based" }
   ]
@@ -172,12 +172,9 @@ Recipe (v1)
   "ingredients": [
     {
       "id": "shrimp",
-      "name": "Raw shrimp",
       "qty": 250,
       "unit": "g",             // one of: g, ml, tbsp, tsp, cup, piece
-      "category": "protein",   // one of: core, protein, vegetable, spice, other
-      "thumbAsset": null,        // optional
-      "thumbUrl": null           // optional
+      "category": "protein"     // one of: core, protein, vegetable, spice, other
     }
   ],
   "steps": [
@@ -194,6 +191,32 @@ Validation Rules (enforced in code)
 - Ingredient `unit` in {`g`, `ml`, `tbsp`, `tsp`, `cup`, `piece`}
 - Ingredient `category` in {`core`, `protein`, `vegetable`, `spice`, `other`}
 - Step fields: `num` > 0, `text` non‑empty, optional `timerSec` and `temperatureC` ≥ 0 when present
+
+---
+
+### Ingredient Catalog (v1)
+Display names and thumbnails are provided by a separate catalog asset and not stored on each ingredient item.
+
+- Source file: `assets/ingredient_catalog.json`
+- Schema:
+  ```jsonc
+  {
+    "version": 1,
+    "items": [
+      {
+        "id": "spinach",
+        "names": { "en": "Spinach" },
+        "image": "assets/ingredients/spinach.png", // optional
+        "aliases": ["baby spinach"]                 // optional
+      }
+    ]
+  }
+  ```
+- UI resolution rules:
+  - Name: locale.languageCode → `en` → fallback to `id`.
+  - Image: explicit `image` from catalog; if absent, UI shows placeholder.
+  - Unknown IDs: UI falls back to `id` for name and placeholder for image.
+  - Adapters may return names, but UI ignores them in favor of the catalog.
 
 ---
 

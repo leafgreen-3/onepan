@@ -21,7 +21,7 @@ v1.Recipe _makeRecipe({String id = 'r1', String title = 'Sample'}) => v1.Recipe(
       diet: 'veg',
       imageAsset: 'assets/images/recipes/$id.png',
       ingredients: const [
-        v1.Ingredient(id: 'oil', name: 'Oil', qty: 1, unit: 'tbsp', category: 'core'),
+        v1.Ingredient(id: 'oil', qty: 1, unit: 'tbsp', category: 'core'),
       ],
       steps: const [
         v1.StepItem(num: 1, text: 'Cook it'),
@@ -82,4 +82,3 @@ void main() {
     expect(find.text('Recipe'), findsOneWidget);
   });
 }
-

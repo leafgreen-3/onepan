@@ -26,7 +26,6 @@ void main() {
         ingredients: const [
           v1.Ingredient(
             id: 'oil',
-            name: 'Oil',
             qty: 1,
             unit: 'tbsp',
             category: 'core',

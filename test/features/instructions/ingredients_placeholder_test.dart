@@ -19,7 +19,7 @@ void main() {
       diet: 'veg',
       imageAsset: 'x',
       ingredients: [
-        v1.Ingredient(id: 'ing-1', name: 'One', qty: 1, unit: 'piece', category: 'other'),
+        v1.Ingredient(id: 'ing-1', qty: 1, unit: 'piece', category: 'other'),
       ],
       steps: [v1.StepItem(num: 1, text: 'Cook')],
     );
@@ -40,4 +40,3 @@ void main() {
     expect(find.byKey(const Key('ing_thumb_placeholder_ing-1')), findsOneWidget);
   });
 }
-

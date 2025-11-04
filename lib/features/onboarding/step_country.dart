@@ -1,13 +1,12 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:onepan/features/onboarding/country_data.dart';
 import 'package:onepan/di/locator.dart';
 import 'package:onepan/features/onboarding/onboarding_widgets.dart';
 import 'package:onepan/router/routes.dart';
 import 'package:onepan/theme/tokens.dart';
-import 'package:onepan/ui/atoms/app_dropdown.dart';
+// Country picker is navigated via go_router route; no direct import needed here.
 
 class OnboardingCountryScreen extends ConsumerStatefulWidget {
   const OnboardingCountryScreen({super.key});
@@ -41,22 +40,26 @@ class _OnboardingCountryScreenState extends ConsumerState<OnboardingCountryScree
     final canProceed = state.country != null && state.country!.isNotEmpty;
 
     final bodyChildren = <Widget>[
-      const SectionHeader(
-        stepLabel: 'Country',
-        title: 'Where are you?',
-        subtitle: 'We\'ll tailor defaults based on your location.',
+      const ExcludeSemantics(
+        child: SectionHeader(
+          stepLabel: 'Country',
+          title: 'Where are you?',
+          subtitle: 'We\'ll tailor defaults based on your location.',
+        ),
       ),
       const SizedBox(height: AppSpacing.xl),
-      AppDropdown(
-        fieldKey: const ValueKey('country-dropdown'),
-        label: 'Country',
-        placeholder: 'Select your country',
-        options: kCommonCountries,
+      _CountryField(
         value: state.country,
-        onChanged: _handleCountrySelected,
-        errorText:
-            _showValidationError && !canProceed ? 'Please choose a country to continue.' : null,
-        semanticsLabel: 'Country',
+        onTap: () async {
+          final selected = await context.push<String>(
+            Routes.countryPicker,
+            extra: state.country,
+          );
+          if (selected != null) {
+            _handleCountrySelected(selected);
+          }
+        },
+        showError: _showValidationError && !canProceed,
       ),
       if (_showValidationError && !canProceed) ...[
         const SizedBox(height: AppSpacing.sm),
@@ -112,6 +115,81 @@ class _OnboardingCountryScreenState extends ConsumerState<OnboardingCountryScree
       behavior: HitTestBehavior.translucent,
       onTap: _handleMissingSelection,
       child: AbsorbPointer(child: button),
+    );
+  }
+}
+
+class _CountryField extends StatelessWidget {
+  const _CountryField({required this.value, required this.onTap, required this.showError});
+  final String? value;
+  final VoidCallback onTap;
+  final bool showError;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasValue = value != null && value!.isNotEmpty;
+
+    final borderColor = showError ? AppColors.danger : AppColors.onSurface;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Semantics(
+          container: true,
+          label: 'Country',
+          button: true,
+          value: hasValue ? value : null,
+          hint: hasValue ? null : 'Select your country',
+          onTap: onTap,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(AppRadii.md),
+            child: Container(
+              decoration: ShapeDecoration(
+                color: AppColors.surface,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppRadii.md),
+                  side: BorderSide(color: borderColor, width: AppThickness.hairline),
+                ),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.md,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const ExcludeSemantics(child: Text('Country', style: AppTextStyles.body)),
+                        // Use labelStyle via Semantics label above; exclude from semantics here.
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          hasValue ? value! : 'Select your country',
+                          style: AppTextStyles.body.copyWith(color: AppColors.onSurface),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                    color: AppColors.onSurface,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        if (showError) ...[
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'Please choose a country to continue.',
+            style: AppTextStyles.body.copyWith(color: AppColors.danger),
+          ),
+        ],
+      ],
     );
   }
 }

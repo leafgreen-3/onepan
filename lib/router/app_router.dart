@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -9,6 +9,8 @@ import 'package:onepan/features/finalizer/finalizer_screen.dart';
 import 'package:onepan/features/home/home_screen.dart';
 import 'package:onepan/features/ingredients/ingredients_screen.dart';
 import 'package:onepan/features/onboarding/onboarding_screen.dart';
+import 'package:onepan/features/onboarding/country_picker/country_picker_screen.dart';
+import 'package:onepan/features/onboarding/country_data.dart';
 import 'package:onepan/features/instructions/instructions_screen.dart';
 import 'package:onepan/features/recipe/recipe_mode.dart';
 import 'package:onepan/features/saved/saved_screen.dart';
@@ -33,6 +35,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     Routes.onboardingCountry,
     Routes.onboardingLevel,
     Routes.onboardingDiet,
+    Routes.countryPicker,
   };
 
   return GoRouter(
@@ -75,6 +78,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: Routes.onboardingDiet,
         name: 'onboarding_diet',
         builder: (context, state) => const OnboardingDietScreen(),
+      ),
+      GoRoute(
+        path: Routes.countryPicker,
+        name: 'country_picker',
+        pageBuilder: (context, state) {
+          final initial = state.extra is String ? state.extra as String : null;
+          return MaterialPage<void>(
+            fullscreenDialog: true,
+            child: CountryPickerScreen(
+              initial: initial,
+              countries: kCommonCountries,
+            ),
+          );
+        },
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
